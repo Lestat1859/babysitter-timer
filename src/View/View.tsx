@@ -6,6 +6,8 @@ import BabySittingElement from "../Babysitting/BabySittingElement";
 import {addHours, addMinutes, Duration, format} from "date-fns";
 import {sumDurations, filterUniqueYearsFromDates} from "../Utils/dates";
 
+
+const months:string[] = ["Janvier","Février", "Mars", "Avril", "Mai", "juin", "juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
 function View(){
 
     const navigate = useNavigate();
@@ -17,6 +19,8 @@ function View(){
     const [selectedMonth, setSelectedMonth] = useState<string>(format(new Date(),'MMMM'));
 
     const [babySittings] = useRecoilState(durationState);
+
+
 
 
     useEffect(()=>{
@@ -75,20 +79,10 @@ function View(){
                         ))}
                     </select>
                 </div>
-
                 <div>
-                    <button onClick={()=>handleMonthButtonClick("Janvier")}>Janvier</button>
-                    <button onClick={()=>handleMonthButtonClick("Février")}>Février</button>
-                    <button onClick={()=>handleMonthButtonClick("Mars")}>Mars</button>
-                    <button onClick={()=>handleMonthButtonClick("Avril")}>Avril</button>
-                    <button onClick={()=>handleMonthButtonClick("Mai")}>Mai</button>
-                    <button onClick={()=>handleMonthButtonClick("Juin")}>Juin</button>
-                    <button onClick={()=>handleMonthButtonClick("Juillet")}>Juillet</button>
-                    <button onClick={()=>handleMonthButtonClick("Août")}>Août</button>
-                    <button onClick={()=>handleMonthButtonClick("Septembre")}>Septembre</button>
-                    <button onClick={()=>handleMonthButtonClick("Octobre")}>Octobre</button>
-                    <button onClick={()=>handleMonthButtonClick("Novembre")}>Novembre</button>
-                    <button onClick={()=>handleMonthButtonClick("Décembre")}>Décembre</button>
+                    {months.map((month)=>(
+                        <button onClick={()=>handleMonthButtonClick(month)}>{month}</button>
+                    ))}
                 </div>
 
                 <div>
