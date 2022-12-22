@@ -4,6 +4,7 @@ import {
     dateStringToDate,
     filterUniqueYearsFromDates,
     filterUniqueMonthsFromDates,
+    lastThreeYears,
     monthNumberToMonthString
 } from './dates'
 
@@ -47,6 +48,9 @@ it( 'Should return the month in a string format', ()=>{
     expect(monthNumberToMonthString(11)).toEqual("Décembre");
 })
 
+it( 'Should return the last three years',()=>{
+    expect (lastThreeYears(2022)).toEqual([2022,2021,2020]);
+})
 
 
 
