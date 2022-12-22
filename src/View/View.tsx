@@ -5,6 +5,7 @@ import {durationState} from '../recoil_states';
 import BabySittingElement from "../Babysitting/BabySittingElement";
 import {addHours, addMinutes, Duration, format} from "date-fns";
 import {sumDurations, filterUniqueYearsFromDates, lastThreeYears} from "../Utils/dates";
+import BabySittingList from "../Babysitting/BabySittingList";
 
 
 const months:string[] = ["Janvier","Février", "Mars", "Avril", "Mai", "juin", "juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
@@ -87,17 +88,9 @@ function View(){
                 </div>
 
                 <div>
-                    {babySittings.map((durationItem, index)=>(
-                        <BabySittingElement
-                            key={`BabySittingElement-${index}`}
-                            id={durationItem.id}
-                            arrivalDate={durationItem.arrivalDate}
-                            departureDate={durationItem.departureDate}
-                            duration={durationItem.duration}
-                        />
-                        )
-                    )}
+                    <BabySittingList />
                 </div>
+
                 <h4> Durée Totale sur la période : {totalDurations.hours}h{totalDurations.minutes}min</h4>
                 <button onClick={handleNewBabysitting}>Nouvelle saisie de temps</button>
             </div>
