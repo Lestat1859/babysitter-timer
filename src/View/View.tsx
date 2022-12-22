@@ -2,14 +2,11 @@ import React, {useEffect, useState} from 'react';
 import { useNavigate } from "react-router-dom";
 import {useRecoilState} from "recoil";
 import {durationState} from '../recoil_states';
-import BabySittingElement from "../Babysitting/BabySittingElement";
-import {addHours, addMinutes, Duration, format} from "date-fns";
-import {sumDurations, filterUniqueYearsFromDates, lastThreeYears} from "../Utils/dates";
+import {sumDurations, filterUniqueYearsFromDates} from "../Utils/dates";
 import BabySittingList from "../Babysitting/BabySittingList";
+import BabySittingFilters from "../Babysitting/BabySittingFilters";
 
 
-const months:string[] = ["Janvier","Février", "Mars", "Avril", "Mai", "juin", "juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-const years:number[] = lastThreeYears(new Date().getFullYear());
 function View(){
 
     const navigate = useNavigate();
@@ -17,12 +14,7 @@ function View(){
 
     const [totalDurations, setTotalDurations] = useState<Duration>(emptyDuration);
     const [babySittingYears, setBabySittingYears] = useState<number[]>([]);
-    const [selectedYear,setSelectedYear] =  useState<number>(new Date().getFullYear());
-    const [selectedMonth, setSelectedMonth] = useState<string>(format(new Date(),'MMMM'));
-
     const [babySittings] = useRecoilState(durationState);
-
-
 
 
     useEffect(()=>{
@@ -39,11 +31,6 @@ function View(){
         navigate("/babysitting");
     }
 
-    function handleSelectYearChange(event:any){
-        //console.log('handler : ' + event.target.value)
-        setSelectedYear(event.target.value)
-    }
-
     function filterBabySittingYears(){
         const dates:Date[] = babySittings.map((babySitting)=>{
             return babySitting.arrivalDate
@@ -57,11 +44,6 @@ function View(){
         return durations;
     }
 
-    function handleMonthButtonClick(month:string){
-        setSelectedMonth(month);
-    }
-
-
     return(
         <>
             <div>
@@ -69,22 +51,8 @@ function View(){
                     Liste des présences
                 </h2>
 
-                <h3>
-                    {selectedMonth} {selectedYear}
-                </h3>
-
                 <div>
-                    <label>Sélectionner l'année : </label>
-                    <select value={selectedYear} onChange={handleSelectYearChange}>
-                        {years.map((year,index:number)=>(
-                            <option key={`${year}-${index}`}>{year}</option>
-                        ))}
-                    </select>
-                </div>
-                <div>
-                    {months.map((month)=>(
-                        <button onClick={()=>handleMonthButtonClick(month)}>{month}</button>
-                    ))}
+                    <BabySittingFilters />
                 </div>
 
                 <div>
