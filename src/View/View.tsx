@@ -4,10 +4,11 @@ import {useRecoilState} from "recoil";
 import {durationState} from '../recoil_states';
 import BabySittingElement from "../Babysitting/BabySittingElement";
 import {addHours, addMinutes, Duration, format} from "date-fns";
-import {sumDurations, filterUniqueYearsFromDates} from "../Utils/dates";
+import {sumDurations, filterUniqueYearsFromDates, lastThreeYears} from "../Utils/dates";
 
 
 const months:string[] = ["Janvier","Février", "Mars", "Avril", "Mai", "juin", "juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+const years:number[] = lastThreeYears(new Date().getFullYear());
 function View(){
 
     const navigate = useNavigate();
@@ -74,8 +75,8 @@ function View(){
                 <div>
                     <label>Sélectionner l'année : </label>
                     <select value={selectedYear} onChange={handleSelectYearChange}>
-                        {babySittingYears.sort((a,b)=>b-a).map((babySittingYear,index:number)=>(
-                            <option key={`${babySittingYear}-${index}`}>{babySittingYear}</option>
+                        {years.map((year,index:number)=>(
+                            <option key={`${year}-${index}`}>{year}</option>
                         ))}
                     </select>
                 </div>

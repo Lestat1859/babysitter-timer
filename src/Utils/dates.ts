@@ -17,6 +17,10 @@ export function dateStringToDate<Date>(dateString:string){
     return new Date(year, month, day);
 };
 
+export function lastThreeYears(year:number):number[]{
+    return[year,year-1, year-2]
+}
+
 
 export function sumDurations(durations:Duration[]):Duration{
     const referenceDay:Date = new Date('1970-01-01T00:00:00.000');
