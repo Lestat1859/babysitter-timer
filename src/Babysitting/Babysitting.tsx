@@ -1,10 +1,23 @@
 import React, {useEffect, useState} from 'react';
-import {Duration, format, intervalToDuration} from "date-fns";
+import {Duration, format} from "date-fns";
 import {calculateDurationBetweenTwoDates, dateStringToDate} from '../Utils/dates'
 import {useNavigate} from "react-router-dom";
 import {useRecoilState} from "recoil";
 import {babysittingState} from '../recoil_states'
 import { v4 as uuidv4 } from 'uuid';
+import {IbabySitting} from "../Interfaces/IbabySitting";
+
+function addBabySittingToLocalStorage(babySiting: IbabySitting){
+    const babSittingLocalStorage:string = localStorage.getItem('babySittings') || "";
+    let babySitings:IbabySitting[] = [];
+    if(babSittingLocalStorage!==""){
+        babySitings = JSON.parse(babSittingLocalStorage);
+        babySitings.push(babySiting);
+    }else{
+        babySitings.push(babySiting);
+    }
+    localStorage.setItem('babySittings', JSON.stringify(babySitings));
+}
 
 function Babysitting(){
 
@@ -25,12 +38,17 @@ function Babysitting(){
 
     function handleSave(){
         if ((duration.days !== 0) || (duration.hours !== 0) || (duration.minutes !== 0) || (duration.seconds !== 0)){
-            setBabySittings([...babySittings, {
+
+            const babySitting = {
                 id:uuidv4(),
                 arrivalDate: arrivalDate,
                 departureDate: departureDate,
                 duration:duration
-            }]);
+            }
+
+            addBabySittingToLocalStorage(babySitting);
+            setBabySittings([...babySittings, babySitting]);
+
             navigate(-1);
         }
         else{

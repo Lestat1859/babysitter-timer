@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import {lastThreeYears} from "../Utils/dates";
 import {format} from "date-fns";
 import {babysittingFilterState} from "../recoil_states";

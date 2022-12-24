@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 
 import BabySittingList from "../Babysitting/BabySittingList";
 import BabySittingFilters from "../Babysitting/BabySittingFilters";
