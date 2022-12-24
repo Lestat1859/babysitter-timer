@@ -38,12 +38,6 @@ function BabySittingFilters() {
 
     }
 
-    useEffect(() => {
-
-            console.table([filter.id,filter.year,filter.month])
-    }, [filter]);
-
-
 
     return (
         <>

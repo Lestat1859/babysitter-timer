@@ -30,7 +30,6 @@ function Babysitting(){
             departureDate: departureDate,
             duration:duration
         }]);
-        alert('Données enregistrés')
         navigate(-1);
     }
 

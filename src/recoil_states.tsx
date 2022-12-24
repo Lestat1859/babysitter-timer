@@ -1,6 +1,8 @@
 import { atom, selector } from "recoil";
 import {IbabySitting} from "./Interfaces/IbabySitting";
 import {IbabysittingFilter} from "./Interfaces/IbabysittingFilter";
+import {Duration} from "date-fns";
+import {sumDurations} from "./Utils/dates";
 
 const defaultDurationState:IbabySitting[] = [];
 const defaultBabysittingFilter:IbabysittingFilter = {
@@ -36,8 +38,17 @@ const filteredBabySittingState = selector({
     }
 });
 
+const babysittingStatsState = selector({
+    key:"babysittingStatsState",
+    get:({get})=>{
+        const listBabySittings:IbabySitting[] = get(filteredBabySittingState);
+        const totalBabySittings:number = listBabySittings.length;
+        const totalBabysittingDurations:Duration = sumDurations(listBabySittings.map( (babySitting) =>
+        {return babySitting.duration}))
+
+        return {totalBabySittings,totalBabysittingDurations};
+    }
+})
 
 
-
-
-export {babysittingState, babysittingFilterState, filteredBabySittingState};
+export {babysittingState, babysittingFilterState, filteredBabySittingState, babysittingStatsState};

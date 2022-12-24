@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { useNavigate } from "react-router-dom";
-import {useRecoilState} from "recoil";
-import {babysittingState} from '../recoil_states';
+import {useRecoilState, useRecoilValue} from "recoil";
+import {babysittingState, babysittingStatsState} from '../recoil_states';
 import {sumDurations, filterUniqueYearsFromDates} from "../Utils/dates";
 import BabySittingList from "../Babysitting/BabySittingList";
 import BabySittingFilters from "../Babysitting/BabySittingFilters";
@@ -10,11 +10,10 @@ import BabySittingFilters from "../Babysitting/BabySittingFilters";
 function View(){
 
     const navigate = useNavigate();
-    const emptyDuration:Duration = {years:0,months:0,days:0,hours:0,minutes:0,seconds:0};
 
-    const [totalDurations, setTotalDurations] = useState<Duration>(emptyDuration);
     const [babySittingYears, setBabySittingYears] = useState<number[]>([]);
     const [babySittings] = useRecoilState(babysittingState);
+    const {totalBabySittings,totalBabysittingDurations} = useRecoilValue(babysittingStatsState);
 
 
     useEffect(()=>{
@@ -24,7 +23,6 @@ function View(){
 
     useEffect(()=>{
         setBabySittingYears(filterBabySittingYears());
-        setTotalDurations(sumDurations(filterBabySittingDurations()));
     },[babySittings]);
 
     function handleNewBabysitting(){
@@ -38,11 +36,6 @@ function View(){
         return filterUniqueYearsFromDates(dates);
     }
 
-    function filterBabySittingDurations(){
-        const durations = babySittings.map( (babySitting) =>
-        {return babySitting.duration});
-        return durations;
-    }
 
     return(
         <>
@@ -59,9 +52,25 @@ function View(){
                     <BabySittingList />
                 </div>
 
-                <h4> Durée Totale sur la période : {totalDurations.hours}h{totalDurations.minutes}min</h4>
-                <button onClick={handleNewBabysitting}>Nouvelle saisie de temps</button>
+                <div>
+                    <p>------------------------</p>
+                    <button onClick={handleNewBabysitting}>Nouvelle saisie de temps</button>
+                    <p>------------------------</p>
+                </div>
+
             </div>
+
+            {
+                totalBabySittings !==0 ? (
+                <div>
+                    <h3> Nombre de gardes sur la période : {totalBabySittings}</h3>
+                    <h3> Durée Totale sur la période : {totalBabysittingDurations.hours}h{totalBabysittingDurations.minutes}min</h3>
+                </div>
+                ) : (<>
+                    <h3> Aucune garde sur la période</h3>
+                </>)
+            }
+
         </>
 
     );
