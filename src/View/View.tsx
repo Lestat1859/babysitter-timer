@@ -5,23 +5,13 @@ import BabySittingFilters from "../Babysitting/BabySittingFilters";
 import BabySittingStats from "../Babysitting/BabySittingStats";
 
 function View(){
-
     return(
         <>
-            <div>
-                <h2>
-                    Liste des présences
-                </h2>
-                <div>
-                    <BabySittingFilters />
-                </div>
-                <div>
-                    <BabySittingList />
-                </div>
-            </div>
+            <BabySittingFilters />
+            <BabySittingList />
             <BabySittingStats />
         </>
-    );
+    )
 }
 
 export default View;

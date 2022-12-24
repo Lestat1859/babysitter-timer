@@ -14,7 +14,7 @@ function Babysitting(){
     const [arrivalDate, setArrivalDate] = useState<Date>(new Date());
     const [departureDate, setDepartureDate] = useState<Date>(new Date());
 
-    const [durationAtom, setDurationAtom] = useRecoilState(babysittingState);
+    const [babySittings, setBabySittings] = useRecoilState(babysittingState);
 
     const navigate = useNavigate();
 
@@ -24,13 +24,19 @@ function Babysitting(){
     }
 
     function handleSave(){
-        setDurationAtom([...durationAtom, {
-            id:uuidv4(),
-            arrivalDate: arrivalDate,
-            departureDate: departureDate,
-            duration:duration
-        }]);
-        navigate(-1);
+        if ((duration.days !== 0) || (duration.hours !== 0) || (duration.minutes !== 0) || (duration.seconds !== 0)){
+            setBabySittings([...babySittings, {
+                id:uuidv4(),
+                arrivalDate: arrivalDate,
+                departureDate: departureDate,
+                duration:duration
+            }]);
+            navigate(-1);
+        }
+        else{
+            alert("Vous devez saisir une durée supérieur a 0 avant de pouvoir enregistrer ")
+        }
+
     }
 
 
@@ -71,50 +77,45 @@ function Babysitting(){
 
 
     return(
+        <section>
 
-        <>
-            <section>
+            <div>
+                <label> Date d'arrivée : </label>
+                <input type="date" value={format(arrivalDate, "yyyy-MM-dd")} onChange={handleArrivalDateChange}/>
+            </div>
 
-                <div>
-                    <label> Date d'arrivée : </label>
-                    <input type="date" value={format(arrivalDate, "yyyy-MM-dd")} onChange={handleArrivalDateChange}/>
-                </div>
+            <div>
+                <label> Heure d'arrivée : </label>
+                <input  type="time" value={format(arrivalDate, "HH:mm")} onChange={handleArrivalTimeChange} />
+            </div>
 
-                <div>
-                    <label> Heure d'arrivée : </label>
-                    <input  type="time" value={format(arrivalDate, "HH:mm")} onChange={handleArrivalTimeChange} />
-                </div>
+            <p></p>
 
+            <div>
+                <label> Date de départ : </label>
+                <input type="date" value={format(departureDate, "yyyy-MM-dd")} onChange={handleDepartureDateChange}/>
+            </div>
 
-                <p></p>
+            <div>
+                <label> Heure de départ : </label>
+                <input  type="time" value={format(departureDate, "HH:mm")} onChange={handleDepartureTimeChange} />
+            </div>
 
-                <div>
-                    <label> Date de départ : </label>
-                    <input type="date" value={format(departureDate, "yyyy-MM-dd")} onChange={handleDepartureDateChange}/>
-                </div>
+            <p></p>
 
-                <div>
-                    <label> Heure de départ : </label>
-                    <input  type="time" value={format(departureDate, "HH:mm")} onChange={handleDepartureTimeChange} />
-                </div>
+            <div>
+                <button onClick={handleCalculateClick}> Calculer  </button>
+            </div>
 
-                <p></p>
-
-                <div>
-                    <button onClick={handleCalculateClick}> Calculer  </button>
-                </div>
-
-                <div>
-                    <button onClick={handleSave}> Enregistrer  </button>
-                    <button onClick={handleReturn}> Retour  </button>
-                </div>
+            <div>
+                <button onClick={handleSave}> Enregistrer  </button>
+                <button onClick={handleReturn}> Retour  </button>
+            </div>
 
 
-                <p></p>
-                <h4> Durée : {duration.hours } h {duration.minutes || 0} min </h4>
-
-            </section>
-        </>
+            <p></p>
+            <h4> Durée : {duration.hours } h {duration.minutes || 0} min </h4>
+        </section>
     )
 }
 

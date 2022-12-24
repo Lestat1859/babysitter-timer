@@ -15,6 +15,9 @@ function BabySittingList (){
 
     return(
         <>
+            <h2>
+                Liste des présences
+            </h2>
             {babySittings.map((durationItem, index)=>(
                     <BabySittingElement
                         key={`BabySittingElement-${index}`}
@@ -29,7 +32,7 @@ function BabySittingList (){
 
             <div>
                 <p>------------------------</p>
-                <button onClick={handleNewBabysitting}>Nouvelle saisie de temps</button>
+                <button onClick={handleNewBabysitting}>Ajouter une présence</button>
                 <p>------------------------</p>
             </div>
         </>

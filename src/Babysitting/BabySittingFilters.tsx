@@ -35,9 +35,10 @@ function BabySittingFilters() {
 
     return (
         <>
-            <h3>
+            <h2>Filtres</h2>
+            <h4>
                 {selectedMonth} {selectedYear}
-            </h3>
+            </h4>
 
             <div>
                 <label>Sélectionner l'année : </label>
