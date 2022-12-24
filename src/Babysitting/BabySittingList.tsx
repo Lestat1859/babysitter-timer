@@ -1,12 +1,12 @@
 
 import BabySittingElement from "./BabySittingElement";
-import {useRecoilState} from "recoil";
-import {durationState} from '../recoil_states';
+import { useRecoilValue} from "recoil";
+import { filteredBabySittingState} from '../recoil_states';
 import React from "react";
 
 
 function BabySittingList (){
-    const [babySittings] = useRecoilState(durationState);
+    const babySittings = useRecoilValue(filteredBabySittingState);
 
     return(
         <>

@@ -3,7 +3,7 @@ import {Duration, format, intervalToDuration} from "date-fns";
 import {calculateDurationBetweenTwoDates, dateStringToDate} from '../Utils/dates'
 import {useNavigate} from "react-router-dom";
 import {useRecoilState} from "recoil";
-import {durationState} from '../recoil_states'
+import {babysittingState} from '../recoil_states'
 import { v4 as uuidv4 } from 'uuid';
 
 function Babysitting(){
@@ -14,7 +14,7 @@ function Babysitting(){
     const [arrivalDate, setArrivalDate] = useState<Date>(new Date());
     const [departureDate, setDepartureDate] = useState<Date>(new Date());
 
-    const [durationAtom, setDurationAtom] = useRecoilState(durationState);
+    const [durationAtom, setDurationAtom] = useRecoilState(babysittingState);
 
     const navigate = useNavigate();
 

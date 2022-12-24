@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { useNavigate } from "react-router-dom";
 import {useRecoilState} from "recoil";
-import {durationState} from '../recoil_states';
+import {babysittingState} from '../recoil_states';
 import {sumDurations, filterUniqueYearsFromDates} from "../Utils/dates";
 import BabySittingList from "../Babysitting/BabySittingList";
 import BabySittingFilters from "../Babysitting/BabySittingFilters";
@@ -14,7 +14,7 @@ function View(){
 
     const [totalDurations, setTotalDurations] = useState<Duration>(emptyDuration);
     const [babySittingYears, setBabySittingYears] = useState<number[]>([]);
-    const [babySittings] = useRecoilState(durationState);
+    const [babySittings] = useRecoilState(babysittingState);
 
 
     useEffect(()=>{
