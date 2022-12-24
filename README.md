@@ -1,11 +1,21 @@
-# Getting Started with Create React App
+# BabySitter timer
+
+## Purpose
+
+An app to follow the time spent by the babysitter and pay her/him at the end of the month.
+
+Front made with reactJS and recoil
+
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+
+# Install and run
 
 ## Available Scripts
 
 In the project directory, you can run:
-
 ### `npm start`
 
 Runs the app in the development mode.\
