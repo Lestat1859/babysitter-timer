@@ -3,16 +3,10 @@ import {lastThreeYears} from "../Utils/dates";
 import {format} from "date-fns";
 import {babysittingFilterState} from "../recoil_states";
 import {useRecoilState} from "recoil";
-import {IbabysittingFilter} from "../Interfaces/IbabysittingFilter";
 
 
 const years:number[] = lastThreeYears(new Date().getFullYear());
 const months:string[] = ["Janvier","Février", "Mars", "Avril", "Mai", "juin", "juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-const defaultFilter:IbabysittingFilter = {
-    id:'',
-    year: new Date().getFullYear(),
-    month: new Date().getMonth()+1
-}
 
 function BabySittingFilters() {
 
