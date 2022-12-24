@@ -5,9 +5,8 @@ import {IbabysittingFilter} from "./Interfaces/IbabysittingFilter";
 const defaultDurationState:IbabySitting[] = [];
 const defaultBabysittingFilter:IbabysittingFilter = {
     id:'',
-    year:0,
-    month:0,
-
+    year: new Date().getFullYear(),
+    month: new Date().getMonth()+1
 }
 
 const babysittingState = atom({
@@ -25,23 +24,15 @@ const babysittingFilterState = atom({
 const filteredBabySittingState = selector({
     key: "filteredBabySittingState",
     get : ({get})=>{
-        const list:IbabySitting[]  = get(babysittingState);
-        const filter:IbabysittingFilter = get(babysittingFilterState)
-        //const filteredList:IbabySitting[] = get(babysittingFilterState);
-
-
-        if (filter.year !== 0){
-            return list.filter((babysitting)=>babysitting.arrivalDate.getFullYear()===filter.year);
-        }else {
-            return list
+        let list:IbabySitting[]  = get(babysittingState);
+        const filteredList:IbabysittingFilter = get(babysittingFilterState)
+        if (filteredList.year !== 0){
+            list = list.filter((babysitting)=>babysitting.arrivalDate.getFullYear()==filteredList.year);
+            if (filteredList.month !== 0){
+                list = list.filter((babysitting)=>babysitting.arrivalDate.getMonth()+1==filteredList.month)
+            }
         }
-
-
-
-        //return list.filter((babysitting)=>babysitting.arrivalDate.getFullYear()===2023);
-
-
-
+        return list
     }
 });
 
@@ -49,4 +40,4 @@ const filteredBabySittingState = selector({
 
 
 
-export {babysittingState, filteredBabySittingState};
+export {babysittingState, babysittingFilterState, filteredBabySittingState};

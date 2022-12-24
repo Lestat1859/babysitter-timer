@@ -1,24 +1,49 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {lastThreeYears} from "../Utils/dates";
 import {format} from "date-fns";
+import {babysittingFilterState} from "../recoil_states";
+import {useRecoilState} from "recoil";
+import {IbabysittingFilter} from "../Interfaces/IbabysittingFilter";
 
 
 const years:number[] = lastThreeYears(new Date().getFullYear());
 const months:string[] = ["Janvier","Février", "Mars", "Avril", "Mai", "juin", "juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+const defaultFilter:IbabysittingFilter = {
+    id:'',
+    year: new Date().getFullYear(),
+    month: new Date().getMonth()+1
+}
 
 function BabySittingFilters() {
 
     const [selectedYear,setSelectedYear] =  useState<number>(new Date().getFullYear());
     const [selectedMonth, setSelectedMonth] = useState<string>(format(new Date(),'MMMM'));
+    const [filter, setFilter] = useRecoilState(babysittingFilterState);
 
     function handleSelectYearChange(event:any){
         //console.log('handler : ' + event.target.value)
         setSelectedYear(event.target.value)
+        setFilter({
+            ...filter,
+            year:event.target.value
+        })
     }
 
-    function handleMonthButtonClick(month:string){
-        setSelectedMonth(month);
+    function handleMonthButtonClick(monthString:string, monthNumber:number){
+        setSelectedMonth(monthString);
+        setFilter({
+            ...filter,
+            month:monthNumber
+        })
+
     }
+
+    useEffect(() => {
+
+            console.table([filter.id,filter.year,filter.month])
+    }, [filter]);
+
+
 
     return (
         <>
@@ -35,8 +60,8 @@ function BabySittingFilters() {
                 </select>
             </div>
             <div>
-                {months.map((month)=>(
-                    <button onClick={()=>handleMonthButtonClick(month)}>{month}</button>
+                {months.map((month,index)=>(
+                    <button key={`${month}-${index}`} onClick={()=>handleMonthButtonClick(month,index+1)}>{month}</button>
                 ))}
             </div>
         </>
