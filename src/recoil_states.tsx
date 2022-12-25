@@ -48,10 +48,11 @@ const babysittingStatsState = selector({
         const totalBabysittingDurations:Duration = sumDurations(listBabySittings.map( (babySitting) =>
         {return babySitting.duration}));
         const totalBabySittingHours = formatDurationsInHours(totalBabysittingDurations);
+        const totalAmount:number = totalBabySittingHours*9;
 
 
 
-        return {totalBabySittings,totalBabySittingHours};
+        return {totalBabySittings, totalBabySittingHours, totalAmount};
     }
 })
 
