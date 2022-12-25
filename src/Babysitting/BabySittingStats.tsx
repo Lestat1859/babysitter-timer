@@ -3,14 +3,14 @@ import {useRecoilValue} from "recoil";
 import {babysittingStatsState} from "../recoil_states";
 
 function BabySittingStats(){
-    const {totalBabySittings,totalBabysittingDurations} = useRecoilValue(babysittingStatsState);
+    const {totalBabySittings,totalBabySittingHours} = useRecoilValue(babysittingStatsState);
     return (
         <>
             {
                 totalBabySittings !==0 ? (
                     <div>
                         <h3> Nombre de gardes sur la période : {totalBabySittings}</h3>
-                        <h3> Durée Totale sur la période : {totalBabysittingDurations.hours}h{totalBabysittingDurations.minutes}min</h3>
+                        <h3> Durée Totale sur la période : {totalBabySittingHours} heures</h3>
                     </div>
                 ) : (
                     <>

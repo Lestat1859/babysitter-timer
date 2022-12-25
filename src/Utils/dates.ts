@@ -56,3 +56,18 @@ export function monthNumberToMonthString(month:number):string{
     const monthInString = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
     return monthInString[month];
 }
+
+
+export function formatDurationsInHours(duration:Duration):number{
+    let hours:number = 0;
+    if (duration.minutes!==undefined){
+        if (duration.minutes>0) {hours++}
+    }
+    if (duration.hours!==undefined){hours+= duration.hours}
+    if (duration.days!==undefined){hours+= duration.days*24}
+    if (duration.weeks!==undefined){hours+= duration.weeks*24*7}
+    if (duration.months!==undefined){hours+= duration.months*24*30}
+    if (duration.years!==undefined){hours+= duration.years*24*365}
+
+    return hours;
+}

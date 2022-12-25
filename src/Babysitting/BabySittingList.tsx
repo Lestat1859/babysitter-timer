@@ -40,18 +40,3 @@ function BabySittingList (){
 }
 
 export default BabySittingList;
-
-
-/*
-        {babySittings.map((durationItem, index)=>(
-                    <BabySittingElement
-                        key={`BabySittingElement-${index}`}
-                        id={durationItem.id}
-                        arrivalDate={durationItem.arrivalDate}
-                        departureDate={durationItem.departureDate}
-                        duration={durationItem.duration}
-                    />
-                )
-            )
-        }
- */

@@ -5,7 +5,8 @@ import {
     filterUniqueYearsFromDates,
     filterUniqueMonthsFromDates,
     lastThreeYears,
-    monthNumberToMonthString
+    monthNumberToMonthString,
+    formatDurationsInHours
 } from './dates'
 import {IbabySitting} from "../Interfaces/IbabySitting";
 
@@ -23,8 +24,7 @@ const mockedDates:Date[] = [
     new Date("1990/02/01"),
     new Date("1990/01/01"),
 ]
-
-
+const mockedDuration:Duration = {years:1,months:1,weeks:1,hours:1,minutes:1}
 const mockedBabySittingFromLocalStorage:string = `
 [
     {
@@ -35,7 +35,6 @@ const mockedBabySittingFromLocalStorage:string = `
     }
 ]
 `
-
 
 it('should get the year from local storage date',  () => {
     const babySitings:IbabySitting[] = JSON.parse(mockedBabySittingFromLocalStorage);
@@ -72,6 +71,9 @@ it( 'Should return the last three years',()=>{
     expect (lastThreeYears(2022)).toEqual([2022,2021,2020]);
 })
 
+it( 'Should return the number oh hour of a duration',()=>{
+    expect (formatDurationsInHours(mockedDuration)).toEqual(9650);
+})
 
 
 
