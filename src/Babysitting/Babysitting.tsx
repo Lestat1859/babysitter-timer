@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {Duration, format} from "date-fns";
 import {calculateDurationBetweenTwoDates, dateStringToDate} from '../Utils/dates'
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useRecoilState} from "recoil";
 import {babysittingState} from '../recoil_states'
 import { v4 as uuidv4 } from 'uuid';
-import {addBabySittingToLocalStorage} from "../Services/BabySittingService";
+import {addBabySittingToLocalStorage, updateBabySittingToLocalStorage} from "../Services/BabySittingService";
+import {IbabySitting} from "../Interfaces/IbabySitting";
 
 
 function Babysitting(){
@@ -19,6 +20,7 @@ function Babysitting(){
     const [babySittings, setBabySittings] = useRecoilState(babysittingState);
 
     const navigate = useNavigate();
+    const { idBabysitting } = useParams() || "";
 
 
     function handleReturn(){
@@ -27,25 +29,41 @@ function Babysitting(){
 
     function handleSave(){
         if ((duration.days !== 0) || (duration.hours !== 0) || (duration.minutes !== 0) || (duration.seconds !== 0)){
-
-            const babySitting = {
-                id:uuidv4(),
-                arrivalDate: arrivalDate,
-                departureDate: departureDate,
-                duration:duration
+            if (idBabysitting!== undefined){
+                updateBabysitting();
+            }else{
+                addBabysitting();
             }
-
-            addBabySittingToLocalStorage(babySitting);
-            setBabySittings([...babySittings, babySitting]);
-
             navigate(-1);
         }
         else{
             alert("Vous devez saisir une durée supérieur a 0 avant de pouvoir enregistrer ")
         }
-
     }
 
+    function addBabysitting(){
+        const babySitting = {
+            id:uuidv4(),
+            arrivalDate: arrivalDate,
+            departureDate: departureDate,
+            duration:duration
+        }
+        addBabySittingToLocalStorage(babySitting);
+        setBabySittings([...babySittings, babySitting]);
+    }
+    function updateBabysitting(){
+        const babySitting:IbabySitting = {
+            id:idBabysitting || "",
+            arrivalDate: arrivalDate,
+            departureDate: departureDate,
+            duration:duration
+        }
+        let babySitingsUpdated:IbabySitting[] = babySittings.slice();
+        const babysittingPosition:number = babySitingsUpdated.findIndex((babysitting)=>babysitting.id===idBabysitting)
+        babySitingsUpdated[babysittingPosition] = babySitting;
+        updateBabySittingToLocalStorage(babySitting);
+        setBabySittings(babySitingsUpdated);
+    }
 
     function handleArrivalTimeChange(event:any){
         const dateTemp = event.target.value.split(":");

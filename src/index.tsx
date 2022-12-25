@@ -19,9 +19,14 @@ const router = createBrowserRouter([
         element: <View/>,
     },
     {
-        path: "/babysitting",
+        path: "/babysitting/add",
         element: <Babysitting/>
-    }
+    },
+    {
+        path: "/babysitting/edit/:idBabysitting",
+        element: <Babysitting/>
+    },
+
 ]);
 
 

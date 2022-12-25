@@ -1,8 +1,9 @@
 import {Duration} from "date-fns";
 import React from "react";
-import {deleteBabySittingFromLocalStorage} from "../Services/BabySittingService";
+import {deleteBabySittingToLocalStorage} from "../Services/BabySittingService";
 import {useRecoilState} from "recoil";
 import {babysittingState} from "../recoil_states";
+import { useNavigate } from "react-router-dom";
 
 
 type DurationProps={
@@ -13,17 +14,18 @@ type DurationProps={
 }
 function BabySittingElement(props:DurationProps){
     const [babySittings, setBabySittings] = useRecoilState(babysittingState);
+    const navigate = useNavigate();
 
     function handleDelete(){
         const okToDelete:boolean = window.confirm("Voulez-vous vraiment supprimer cet saisie ?");
         if (okToDelete) {
-            deleteBabySittingFromLocalStorage(props.id);
+            deleteBabySittingToLocalStorage(props.id);
             setBabySittings(babySittings.filter((babySitting) => babySitting.id !== props.id))
         }
     }
 
     function handleUpdate(){
-
+        navigate("/babysitting/edit/"+props.id);
     }
 
     return (

@@ -10,7 +10,7 @@ function BabySittingList (){
     const navigate = useNavigate();
 
     function handleNewBabysitting(){
-        navigate("/babysitting");
+        navigate("/babysitting/add");
     }
 
     return(

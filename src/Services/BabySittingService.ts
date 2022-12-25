@@ -1,12 +1,21 @@
 import {IbabySitting} from "../Interfaces/IbabySitting";
 
-function addBabySittingToLocalStorage(babySiting: IbabySitting){
+function addBabySittingToLocalStorage(babySitting: IbabySitting){
     let babySitings:IbabySitting[] = fetchBabySittingsFromLocalStorage();
-    babySitings.push(babySiting);
+    babySitings.push(babySitting);
     localStorage.setItem('babySittings', JSON.stringify(babySitings));
 }
 
-function deleteBabySittingFromLocalStorage(id:string){
+function updateBabySittingToLocalStorage(babySittingToUpdate: IbabySitting){
+    let babySitings:IbabySitting[] = fetchBabySittingsFromLocalStorage();
+    const babisittingPosition:number = babySitings.findIndex((babySitting)=>babySitting.id===babySittingToUpdate.id);
+    babySitings[babisittingPosition] = babySittingToUpdate;
+    localStorage.setItem('babySittings', JSON.stringify(babySitings));
+}
+
+
+
+function deleteBabySittingToLocalStorage(id:string){
     let babySittings: IbabySitting[] = fetchBabySittingsFromLocalStorage();
     babySittings = babySittings.filter((babySitting) => babySitting.id !== id);
     localStorage.setItem('babySittings', JSON.stringify(babySittings));
@@ -29,4 +38,9 @@ function fetchBabySittingsFromLocalStorage():IbabySitting[]{
 }
 
 
-export {addBabySittingToLocalStorage,deleteBabySittingFromLocalStorage,fetchBabySittingsFromLocalStorage};
+export {
+    addBabySittingToLocalStorage,
+    deleteBabySittingToLocalStorage,
+    fetchBabySittingsFromLocalStorage,
+    updateBabySittingToLocalStorage
+};
