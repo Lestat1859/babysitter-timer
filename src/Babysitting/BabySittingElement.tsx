@@ -15,8 +15,15 @@ function BabySittingElement(props:DurationProps){
     const [babySittings, setBabySittings] = useRecoilState(babysittingState);
 
     function handleDelete(){
-        deleteBabySittingFromLocalStorage(props.id );
-        setBabySittings(babySittings.filter((babySitting)=>babySitting.id !== props.id))
+        const okToDelete:boolean = window.confirm("Voulez-vous vraiment supprimer cet saisie ?");
+        if (okToDelete) {
+            deleteBabySittingFromLocalStorage(props.id);
+            setBabySittings(babySittings.filter((babySitting) => babySitting.id !== props.id))
+        }
+    }
+
+    function handleUpdate(){
+
     }
 
     return (
@@ -26,7 +33,10 @@ function BabySittingElement(props:DurationProps){
                 <td>{props.arrivalDate.toLocaleTimeString()}</td>
                 <td>{props.departureDate.toLocaleTimeString()}</td>
                 <td>{props.duration.hours}h{props.duration.minutes}min</td>
-                <td><button>Modifier</button><button onClick={handleDelete}>Supprimer</button></td>
+                <td>
+                    <button onClick={handleUpdate}>Modifier</button>
+                    <button onClick={handleDelete}>Supprimer</button>
+                </td>
             </tr>
         </>
     )

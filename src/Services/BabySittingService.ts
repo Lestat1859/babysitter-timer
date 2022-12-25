@@ -7,8 +7,8 @@ function addBabySittingToLocalStorage(babySiting: IbabySitting){
 }
 
 function deleteBabySittingFromLocalStorage(id:string){
-    let babySittings:IbabySitting[] = fetchBabySittingsFromLocalStorage();
-    babySittings = babySittings.filter((babySitting)=>babySitting.id !== id);
+    let babySittings: IbabySitting[] = fetchBabySittingsFromLocalStorage();
+    babySittings = babySittings.filter((babySitting) => babySitting.id !== id);
     localStorage.setItem('babySittings', JSON.stringify(babySittings));
 }
 
