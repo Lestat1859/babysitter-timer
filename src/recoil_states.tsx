@@ -26,15 +26,19 @@ const babysittingFilterState = atom({
 const filteredBabySittingState = selector({
     key: "filteredBabySittingState",
     get : ({get})=>{
-        let list:IbabySitting[]  = get(babysittingState);
+        //let listBabySittings:IbabySitting[]  = get(babysittingState);
+        let listBabySittings:IbabySitting[]  = get(babysittingState);
+
+
+
         const filteredList:IbabysittingFilter = get(babysittingFilterState)
         if (filteredList.year !== 0){
-            list = list.filter((babysitting)=>babysitting.arrivalDate.getFullYear()==filteredList.year);
+            listBabySittings = listBabySittings.filter((babysitting)=>babysitting.arrivalDate.getFullYear()==filteredList.year);
             if (filteredList.month !== 0){
-                list = list.filter((babysitting)=>babysitting.arrivalDate.getMonth()+1==filteredList.month)
+                listBabySittings = listBabySittings.filter((babysitting)=>babysitting.arrivalDate.getMonth()+1==filteredList.month)
             }
         }
-        return list
+        return listBabySittings
     }
 });
 
