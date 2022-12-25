@@ -1,5 +1,8 @@
 import {Duration} from "date-fns";
 import React from "react";
+import {deleteBabySittingFromLocalStorage} from "../Services/BabySittingService";
+import {useRecoilState} from "recoil";
+import {babysittingState} from "../recoil_states";
 
 
 type DurationProps={
@@ -9,21 +12,23 @@ type DurationProps={
     duration:Duration
 }
 function BabySittingElement(props:DurationProps){
+    const [babySittings, setBabySittings] = useRecoilState(babysittingState);
 
-    function handleElementSelected(){
-        alert('élement ' + props.id + ' sélectionné.')
+    function handleDelete(){
+        deleteBabySittingFromLocalStorage(props.id );
+        setBabySittings(babySittings.filter((babySitting)=>babySitting.id !== props.id))
     }
 
     return (
         <>
-            <h4 onClick={handleElementSelected}>
-                Le {props.arrivalDate.toLocaleDateString()} : de  {props.arrivalDate.toLocaleTimeString()} à {props.departureDate.toLocaleTimeString()}
-            </h4>
-            <h5>
-                soit : {props.duration.hours}h{props.duration.minutes}min
-            </h5>
+            <tr>
+                <td>{props.arrivalDate.toLocaleDateString()}</td>
+                <td>{props.arrivalDate.toLocaleTimeString()}</td>
+                <td>{props.departureDate.toLocaleTimeString()}</td>
+                <td>{props.duration.hours}h{props.duration.minutes}min</td>
+                <td><button>Modifier</button><button onClick={handleDelete}>Supprimer</button></td>
+            </tr>
         </>
-
     )
 }
 

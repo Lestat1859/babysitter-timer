@@ -18,18 +18,30 @@ function BabySittingList (){
             <h2>
                 Liste des présences
             </h2>
-            {babySittings.map((durationItem, index)=>(
-                    <BabySittingElement
-                        key={`BabySittingElement-${index}`}
-                        id={durationItem.id}
-                        arrivalDate={durationItem.arrivalDate}
-                        departureDate={durationItem.departureDate}
-                        duration={durationItem.duration}
-                    />
-                )
-            )
-            }
 
+            <table>
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Arrivée</th>
+                    <th>Départ</th>
+                    <th>Durée</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {babySittings.map((durationItem, index)=>(
+                            <BabySittingElement
+                                key={`BabySittingElement-${index}`}
+                                id={durationItem.id}
+                                arrivalDate={durationItem.arrivalDate}
+                                departureDate={durationItem.departureDate}
+                                duration={durationItem.duration}
+                            />
+                        )
+                    )
+                    }
+                </tbody>
+            </table>
             <div>
                 <p>------------------------</p>
                 <button onClick={handleNewBabysitting}>Ajouter une présence</button>

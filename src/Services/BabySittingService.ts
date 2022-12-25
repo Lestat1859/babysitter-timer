@@ -6,6 +6,14 @@ function addBabySittingToLocalStorage(babySiting: IbabySitting){
     localStorage.setItem('babySittings', JSON.stringify(babySitings));
 }
 
+function deleteBabySittingFromLocalStorage(id:string){
+    let babySittings:IbabySitting[] = fetchBabySittingsFromLocalStorage();
+    babySittings = babySittings.filter((babySitting)=>babySitting.id !== id);
+    localStorage.setItem('babySittings', JSON.stringify(babySittings));
+}
+
+
+
 function fetchBabySittingsFromLocalStorage():IbabySitting[]{
     const babSittingLocalStorage:string = localStorage.getItem('babySittings') || "";
     let babySitings:IbabySitting[] = [];
@@ -18,8 +26,7 @@ function fetchBabySittingsFromLocalStorage():IbabySitting[]{
     }
 
     return babySitings;
-
 }
 
 
-export {addBabySittingToLocalStorage,fetchBabySittingsFromLocalStorage};
+export {addBabySittingToLocalStorage,deleteBabySittingFromLocalStorage,fetchBabySittingsFromLocalStorage};

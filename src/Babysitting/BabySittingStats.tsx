@@ -6,16 +6,19 @@ function BabySittingStats(){
     const {totalBabySittings,totalBabySittingHours, totalAmount} = useRecoilValue(babysittingStatsState);
     return (
         <>
+            <h2>
+                Statistiques
+            </h2>
             {
                 totalBabySittings !==0 ? (
                     <div>
-                        <h3> Nombre de gardes sur la période : {totalBabySittings}</h3>
-                        <h3> Durée Totale sur la période : {totalBabySittingHours} heures</h3>
-                        <h3> Montant a déclarer : {totalAmount} €</h3>
+                        <h4> Nombre de gardes sur la période : {totalBabySittings}</h4>
+                        <h4> Durée Totale sur la période : {totalBabySittingHours} heures</h4>
+                        <h4> Montant a déclarer : {totalAmount} €</h4>
                     </div>
                 ) : (
                     <>
-                        <h3> Aucune garde sur la période</h3>
+                        <h4> Aucune garde sur la période</h4>
                     </>
                 )
             }
