@@ -3,6 +3,7 @@ import {IbabySitting} from "./Interfaces/IbabySitting";
 import {IbabysittingFilter} from "./Interfaces/IbabysittingFilter";
 import {Duration} from "date-fns";
 import {sumDurations} from "./Utils/dates";
+import {fetchBabySittingsFromLocalStorage} from "./Services/BabySittingService";
 
 const defaultDurationState:IbabySitting[] = [];
 const defaultBabysittingFilter:IbabysittingFilter = {
@@ -12,8 +13,8 @@ const defaultBabysittingFilter:IbabysittingFilter = {
 }
 
 const babysittingState = atom({
-    key: "durationState",
-    default: defaultDurationState
+    key: "babysittingState",
+    default: fetchBabySittingsFromLocalStorage()
 });
 
 const babysittingFilterState = atom({
@@ -25,11 +26,8 @@ const babysittingFilterState = atom({
 
 const filteredBabySittingState = selector({
     key: "filteredBabySittingState",
-    get : ({get})=>{
-        //let listBabySittings:IbabySitting[]  = get(babysittingState);
+    get : async ({get})=>{
         let listBabySittings:IbabySitting[]  = get(babysittingState);
-
-
 
         const filteredList:IbabysittingFilter = get(babysittingFilterState)
         if (filteredList.year !== 0){
@@ -49,6 +47,8 @@ const babysittingStatsState = selector({
         const totalBabySittings:number = listBabySittings.length;
         const totalBabysittingDurations:Duration = sumDurations(listBabySittings.map( (babySitting) =>
         {return babySitting.duration}))
+
+
 
         return {totalBabySittings,totalBabysittingDurations};
     }

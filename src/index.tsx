@@ -31,7 +31,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
       <RecoilRoot>
-          <RouterProvider router={router} />
+          <React.Suspense fallback={<div>Loading...</div>}>
+            <RouterProvider router={router} />
+          </React.Suspense>
       </RecoilRoot>
   </React.StrictMode>
 );

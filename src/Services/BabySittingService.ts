@@ -11,8 +11,14 @@ function fetchBabySittingsFromLocalStorage():IbabySitting[]{
     let babySitings:IbabySitting[] = [];
     if (babSittingLocalStorage !==""){
         babySitings = JSON.parse(babSittingLocalStorage);
+        babySitings.forEach((babySitting)=>{
+            babySitting.arrivalDate = new Date(babySitting.arrivalDate)
+            babySitting.departureDate = new Date(babySitting.departureDate)
+        })
     }
+
     return babySitings;
+
 }
 
 

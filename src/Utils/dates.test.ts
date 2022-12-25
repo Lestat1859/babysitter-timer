@@ -7,6 +7,7 @@ import {
     lastThreeYears,
     monthNumberToMonthString
 } from './dates'
+import {IbabySitting} from "../Interfaces/IbabySitting";
 
 const mockedStartDate:Date = new Date('1970-01-01T00:00:00.000');
 const mockedEndDate:Date = new Date('1970-01-01T02:00:00.000');
@@ -22,6 +23,25 @@ const mockedDates:Date[] = [
     new Date("1990/02/01"),
     new Date("1990/01/01"),
 ]
+
+
+const mockedBabySittingFromLocalStorage:string = `
+[
+    {
+        "id":"0964a48c-6a29-441b-838b-a3c42135c471",
+        "arrivalDate":"2022-12-25T07:58:37.110Z",
+        "departureDate":"2022-12-25T11:58:00.000Z",
+        "duration":{"years":0,"months":0,"days":0,"hours":3,"minutes":59,"seconds":22}
+    }
+]
+`
+
+
+it('should get the year from local storage date',  () => {
+    const babySitings:IbabySitting[] = JSON.parse(mockedBabySittingFromLocalStorage);
+    babySitings[0].arrivalDate = new Date(babySitings[0].arrivalDate);
+    expect(babySitings[0].arrivalDate.getFullYear()).toEqual(2022);
+});
 
 it('Should return the duration between two dates', () => {
     expect(calculateDurationBetweenTwoDates(mockedStartDate, mockedEndDate)).toEqual({years:0,months:0,days:0,hours:2,minutes:0,seconds:0});
