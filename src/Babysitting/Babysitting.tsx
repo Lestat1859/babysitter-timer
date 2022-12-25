@@ -5,19 +5,8 @@ import {useNavigate} from "react-router-dom";
 import {useRecoilState} from "recoil";
 import {babysittingState} from '../recoil_states'
 import { v4 as uuidv4 } from 'uuid';
-import {IbabySitting} from "../Interfaces/IbabySitting";
+import {addBabySittingToLocalStorage} from "../Services/BabySittingService";
 
-function addBabySittingToLocalStorage(babySiting: IbabySitting){
-    const babSittingLocalStorage:string = localStorage.getItem('babySittings') || "";
-    let babySitings:IbabySitting[] = [];
-    if(babSittingLocalStorage!==""){
-        babySitings = JSON.parse(babSittingLocalStorage);
-        babySitings.push(babySiting);
-    }else{
-        babySitings.push(babySiting);
-    }
-    localStorage.setItem('babySittings', JSON.stringify(babySitings));
-}
 
 function Babysitting(){
 
