@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {Duration, format} from "date-fns";
-import {calculateDurationBetweenTwoDates, dateStringToDate} from '../Utils/dates'
+import {calculateDurationBetweenTwoDates, dateStringToDate} from '../../utils/dates'
 import {useNavigate, useParams} from "react-router-dom";
 import {useRecoilState} from "recoil";
-import {babysittingState} from '../recoil_states'
+import {babysittingState} from '../../recoil/recoil_states'
 import { v4 as uuidv4 } from 'uuid';
-import {addBabySittingToLocalStorage, updateBabySittingToLocalStorage} from "../Services/BabySittingService";
-import {IbabySitting} from "../Interfaces/IbabySitting";
+import {addBabySittingToLocalStorage, updateBabySittingToLocalStorage} from "../../services/BabySittingService";
+import {IbabySitting} from "../../interfaces/IbabySitting";
 
 
 function Babysitting(){

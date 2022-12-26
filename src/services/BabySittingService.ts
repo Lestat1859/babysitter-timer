@@ -1,4 +1,4 @@
-import {IbabySitting} from "../Interfaces/IbabySitting";
+import {IbabySitting} from "../interfaces/IbabySitting";
 
 function addBabySittingToLocalStorage(babySitting: IbabySitting){
     let babySitings:IbabySitting[] = fetchBabySittingsFromLocalStorage();

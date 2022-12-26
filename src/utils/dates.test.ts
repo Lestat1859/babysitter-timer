@@ -8,7 +8,7 @@ import {
     monthNumberToMonthString,
     formatDurationsInHours
 } from './dates'
-import {IbabySitting} from "../Interfaces/IbabySitting";
+import {IbabySitting} from "../interfaces/IbabySitting";
 
 const mockedStartDate:Date = new Date('1970-01-01T00:00:00.000');
 const mockedEndDate:Date = new Date('1970-01-01T02:00:00.000');

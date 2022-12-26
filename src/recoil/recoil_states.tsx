@@ -1,9 +1,11 @@
 import { atom, selector } from "recoil";
-import {IbabySitting} from "./Interfaces/IbabySitting";
-import {IbabysittingFilter} from "./Interfaces/IbabysittingFilter";
+import {IbabySitting} from "../interfaces/IbabySitting";
+import {IbabysittingFilter} from "../interfaces/IbabysittingFilter";
 import {Duration} from "date-fns";
-import {formatDurationsInHours, sumDurations} from "./Utils/dates";
-import {fetchBabySittingsFromLocalStorage} from "./Services/BabySittingService";
+import {formatDurationsInHours, sumDurations} from "../utils/dates";
+import {fetchBabySittingsFromLocalStorage} from "../services/BabySittingService";
+
+import {firebaseAuth} from "../utils/firebase";
 
 const defaultDurationState:IbabySitting[] = [];
 const defaultBabysittingFilter:IbabysittingFilter = {
@@ -21,8 +23,6 @@ const babysittingFilterState = atom({
     key: "babysittingFilterState",
     default: defaultBabysittingFilter
 });
-
-
 
 const filteredBabySittingState = selector({
     key: "filteredBabySittingState",
@@ -49,12 +49,14 @@ const babysittingStatsState = selector({
         {return babySitting.duration}));
         const totalBabySittingHours = formatDurationsInHours(totalBabysittingDurations);
         const totalAmount:number = totalBabySittingHours*9;
-
-
-
         return {totalBabySittings, totalBabySittingHours, totalAmount};
     }
 })
 
 
-export {babysittingState, babysittingFilterState, filteredBabySittingState, babysittingStatsState};
+export {
+    babysittingState,
+    babysittingFilterState,
+    filteredBabySittingState,
+    babysittingStatsState
+};

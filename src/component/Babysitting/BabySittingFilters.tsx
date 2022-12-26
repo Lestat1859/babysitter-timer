@@ -1,7 +1,7 @@
 import React, {useState} from "react";
-import {lastThreeYears} from "../Utils/dates";
+import {lastThreeYears} from "../../utils/dates";
 import {format} from "date-fns";
-import {babysittingFilterState} from "../recoil_states";
+import {babysittingFilterState} from "../../recoil/recoil_states";
 import {useRecoilState} from "recoil";
 
 

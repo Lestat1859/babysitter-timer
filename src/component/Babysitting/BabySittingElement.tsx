@@ -1,8 +1,8 @@
 import {Duration} from "date-fns";
 import React from "react";
-import {deleteBabySittingToLocalStorage} from "../Services/BabySittingService";
+import {deleteBabySittingToLocalStorage} from "../../services/BabySittingService";
 import {useRecoilState} from "recoil";
-import {babysittingState} from "../recoil_states";
+import {babysittingState} from "../../recoil/recoil_states";
 import { useNavigate } from "react-router-dom";
 
 

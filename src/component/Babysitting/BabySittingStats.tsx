@@ -1,6 +1,6 @@
 import React from "react";
 import {useRecoilValue} from "recoil";
-import {babysittingStatsState} from "../recoil_states";
+import {babysittingStatsState} from "../../recoil/recoil_states";
 
 function BabySittingStats(){
     const {totalBabySittings,totalBabySittingHours, totalAmount} = useRecoilValue(babysittingStatsState);

@@ -2,32 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { RecoilRoot } from 'recoil';
 
-import {
-    createBrowserRouter,
-    RouterProvider,
-} from "react-router-dom";
-
-import View from "./View/View";
-import Babysitting from "./Babysitting/Babysitting";
+import AppRouter from "./component/Router/AppRouter";
 
 
-const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <View/>,
-    },
-    {
-        path: "/babysitting/add",
-        element: <Babysitting/>
-    },
-    {
-        path: "/babysitting/edit/:idBabysitting",
-        element: <Babysitting/>
-    },
 
-]);
+
 
 
 const root = ReactDOM.createRoot(
@@ -35,11 +15,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-      <RecoilRoot>
-          <React.Suspense fallback={<div>Loading...</div>}>
-            <RouterProvider router={router} />
-          </React.Suspense>
-      </RecoilRoot>
+      <AppRouter/>
   </React.StrictMode>
 );
 

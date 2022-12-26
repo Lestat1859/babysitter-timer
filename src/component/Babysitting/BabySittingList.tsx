@@ -1,7 +1,7 @@
 
 import BabySittingElement from "./BabySittingElement";
 import { useRecoilValue} from "recoil";
-import { filteredBabySittingState} from '../recoil_states';
+import { filteredBabySittingState} from '../../recoil/recoil_states';
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
