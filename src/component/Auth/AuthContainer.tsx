@@ -34,8 +34,6 @@ function AuthContainer(){
         }
     };
 
-
-
     return (
         <>
             <h4>Connexion</h4>

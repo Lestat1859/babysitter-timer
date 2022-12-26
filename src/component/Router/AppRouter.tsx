@@ -6,6 +6,7 @@ import View from "../View/View";
 import Babysitting from "../Babysitting/Babysitting";
 import AuthContainer from "../Auth/AuthContainer";
 import {firebaseAuth} from "../../utils/firebase";
+import {isUserInAuthWhiteList} from "../../utils/auth";
 
 
 
@@ -49,7 +50,12 @@ function AppRouter(){
         if (auth) {
             auth.onAuthStateChanged((authUser:any) => {
                 if (authUser) {
-                    setCurrentUser(authUser.email);
+                    if (isUserInAuthWhiteList(authUser.email)){
+                        setCurrentUser(authUser.email);
+                    }else{
+                        setCurrentUser(null);
+                        alert("Access Denied")
+                    }
                 } else {
                     setCurrentUser(null);
                 }
