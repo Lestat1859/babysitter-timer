@@ -5,9 +5,6 @@ import {Duration} from "date-fns";
 import {formatDurationsInHours, sumDurations} from "../utils/dates";
 import {fetchBabySittingsFromLocalStorage} from "../services/BabySittingService";
 
-import {firebaseAuth} from "../utils/firebase";
-
-const defaultDurationState:IbabySitting[] = [];
 const defaultBabysittingFilter:IbabysittingFilter = {
     id:'',
     year: new Date().getFullYear(),

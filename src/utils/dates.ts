@@ -2,14 +2,14 @@ import {addHours, addMinutes, Duration, intervalToDuration} from "date-fns";
 
 const emptyDuration:Duration = {years:0,months:0,days:0,hours:0,minutes:0,seconds:0};
 
-export function calculateDurationBetweenTwoDates<Duration>( Arrival:Date, Departure:Date){
+export function calculateDurationBetweenTwoDates( Arrival:Date, Departure:Date):Duration{
     return (intervalToDuration({
         start:Arrival,
         end:Departure
     }))
 };
 
-export function dateStringToDate<Date>(dateString:string){
+export function dateStringToDate(dateString:string):Date{
     const dateArray = dateString.split("-");
     const year = parseInt(dateArray[0]);
     const month = parseInt(dateArray[1])-1;

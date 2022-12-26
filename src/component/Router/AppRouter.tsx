@@ -1,7 +1,7 @@
 import {RecoilRoot} from "recoil";
 import React, {useEffect, useState} from "react";
 import AuthContext from "../../context/auth-context";
-import {createBrowserRouter, RedirectFunction, RouterProvider} from "react-router-dom";
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import View from "../View/View";
 import Babysitting from "../Babysitting/Babysitting";
 import AuthContainer from "../Auth/AuthContainer";

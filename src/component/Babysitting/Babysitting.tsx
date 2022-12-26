@@ -3,9 +3,9 @@ import {Duration, format} from "date-fns";
 import {calculateDurationBetweenTwoDates, dateStringToDate} from '../../utils/dates'
 import {useNavigate, useParams} from "react-router-dom";
 import {useRecoilState} from "recoil";
+import {addBabySittingToLocalStorage, updateBabySittingToLocalStorage} from "../../services/BabySittingService";
 import {babysittingState} from '../../recoil/recoil_states'
 import { v4 as uuidv4 } from 'uuid';
-import {addBabySittingToLocalStorage, updateBabySittingToLocalStorage} from "../../services/BabySittingService";
 import {IbabySitting} from "../../interfaces/IbabySitting";
 
 function Babysitting(){
@@ -130,14 +130,13 @@ function Babysitting(){
             <p></p>
 
             <div>
-                <button onClick={handleCalculateClick}> Calculer  </button>
+                <button onClick={handleCalculateClick}> Calculer </button>
             </div>
 
             <div>
                 <button onClick={handleSave}> Enregistrer  </button>
                 <button onClick={handleReturn}> Retour  </button>
             </div>
-
 
             <p></p>
             <h4> Durée : {duration.hours } h {duration.minutes || 0} min </h4>
