@@ -57,8 +57,6 @@ function AppRouter(){
         }
     }, []);
 
-
-
     return (
         <RecoilRoot>
             <React.Suspense fallback={<div>Loading...</div>}>

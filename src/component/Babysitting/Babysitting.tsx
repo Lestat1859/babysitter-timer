@@ -8,20 +8,14 @@ import { v4 as uuidv4 } from 'uuid';
 import {addBabySittingToLocalStorage, updateBabySittingToLocalStorage} from "../../services/BabySittingService";
 import {IbabySitting} from "../../interfaces/IbabySitting";
 
-
 function Babysitting(){
-
     const emptyDuration:Duration = {years:0,months:0,days:0,hours:0,minutes:0,seconds:0};
-
     const [duration, setDuration] = useState<Duration>(emptyDuration);
     const [arrivalDate, setArrivalDate] = useState<Date>(new Date());
     const [departureDate, setDepartureDate] = useState<Date>(new Date());
-
     const [babySittings, setBabySittings] = useRecoilState(babysittingState);
-
     const navigate = useNavigate();
     const { idBabysitting } = useParams() || "";
-
 
     function handleReturn(){
         navigate(-1);
@@ -98,12 +92,19 @@ function Babysitting(){
 
     useEffect(()=>{
         setDuration(calculateDurationBetweenTwoDates(arrivalDate,departureDate));
+        if (idBabysitting!== undefined){
+            const babysitting = babySittings.find((element)=> element.id === idBabysitting);
+            if (babysitting !==undefined){
+                setArrivalDate(babysitting.arrivalDate);
+                setDepartureDate(babysitting.departureDate);
+                setDuration(calculateDurationBetweenTwoDates(babysitting.arrivalDate,babysitting.departureDate))
+            }
+        }
     },[]);
 
 
     return(
         <section>
-
             <div>
                 <label> Date d'arrivée : </label>
                 <input type="date" value={format(arrivalDate, "yyyy-MM-dd")} onChange={handleArrivalDateChange}/>
@@ -143,7 +144,5 @@ function Babysitting(){
         </section>
     )
 }
-
-
 
 export default Babysitting;
