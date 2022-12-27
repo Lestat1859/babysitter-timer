@@ -34,8 +34,8 @@ function BabySittingFilters() {
 
 
     return (
-        <>
-            <h2>Filtres</h2>
+        <div className={"mb-5 pt-6 pb-8 px-8 max-w-3xl mx-auto bg-gray-100 rounded-xl shadow-lg items-center space-x-4" }>
+            <h2 className={"mb-3 text-xl font-semibold"}>Filtres</h2>
             <h4>
                 {selectedMonth} {selectedYear}
             </h4>
@@ -50,10 +50,11 @@ function BabySittingFilters() {
             </div>
             <div>
                 {months.map((month,index)=>(
-                    <button key={`${month}-${index}`} onClick={()=>handleMonthButtonClick(month,index+1)}>{month}</button>
+                    <button className={"mx-1 px-4 py-1 text-sm text-blue-600 font-semibold rounded-full border border-blue-200 hover:text-white hover:bg-blue-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
+                        key={`${month}-${index}`} onClick={()=>handleMonthButtonClick(month,index+1)}>{month}</button>
                 ))}
             </div>
-        </>
+        </div>
     )
 
 }
