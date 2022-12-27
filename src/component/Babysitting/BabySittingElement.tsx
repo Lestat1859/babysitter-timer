@@ -17,7 +17,7 @@ function BabySittingElement(props:DurationProps){
     const navigate = useNavigate();
 
     function handleDelete(){
-        const okToDelete:boolean = window.confirm("Voulez-vous vraiment supprimer cet saisie ?");
+        const okToDelete:boolean = window.confirm("Voulez-vous vraiment supprimer cette saisie ?");
         if (okToDelete) {
             deleteBabySittingToLocalStorage(props.id);
             setBabySittings(babySittings.filter((babySitting) => babySitting.id !== props.id))

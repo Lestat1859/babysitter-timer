@@ -19,29 +19,35 @@ function BabySittingList (){
                 Liste des présences
             </h2>
 
-            <table>
-                <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Arrivée</th>
-                    <th>Départ</th>
-                    <th>Durée</th>
-                </tr>
-                </thead>
-                <tbody>
-                    {babySittings.map((durationItem, index)=>(
-                            <BabySittingElement
-                                key={`BabySittingElement-${index}`}
-                                id={durationItem.id}
-                                arrivalDate={durationItem.arrivalDate}
-                                departureDate={durationItem.departureDate}
-                                duration={durationItem.duration}
-                            />
+            {babySittings.length !==0 ?
+                (
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Arrivée</th>
+                            <th>Départ</th>
+                            <th>Durée</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {babySittings.map((durationItem, index)=>(
+                                <BabySittingElement
+                                    key={`BabySittingElement-${index}`}
+                                    id={durationItem.id}
+                                    arrivalDate={durationItem.arrivalDate}
+                                    departureDate={durationItem.departureDate}
+                                    duration={durationItem.duration}
+                                />
+                            )
                         )
-                    )
-                    }
-                </tbody>
-            </table>
+                        }
+                        </tbody>
+                    </table>
+                ) : (<h4> Aucune garde durant cette période</h4>)
+            }
+
+
             <div>
                 <p>------------------------</p>
                 <button onClick={handleNewBabysitting}>Ajouter une présence</button>

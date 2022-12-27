@@ -12,7 +12,7 @@ function View(){
 
     return(
         <>
-            Connecté : {currentUser}
+            Bienvenue {currentUser}
             {
                 currentUser !== null ?
                     (<SignOutButton />) : (<></>)
