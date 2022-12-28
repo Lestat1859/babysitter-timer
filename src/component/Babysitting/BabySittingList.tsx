@@ -15,9 +15,20 @@ function BabySittingList (){
 
     return(
         <div className={"mb-5 pt-6 pb-8 px-8 max-w-3xl mx-auto bg-gray-100 rounded-xl shadow-lg items-center space-x-4" }>
-            <h2 className={" mb-3 text-xl font-semibold"}>
-                Liste des présences
-            </h2>
+            <div className={"flex justify-between"}>
+                <div>
+                    <h2 className={" mb-3 text-xl font-semibold"}>
+                        Liste des présences
+                    </h2>
+                    <p className={"text-gray-600 mb-2"}>Liste et détail des présences durant la période séléctionnée</p>
+                </div>
+
+                <button className={"mx-1 px-4 py-1 h-8 text-sm  bg-blue-600 text-gray-50 font-semibold rounded-md border border-blue-600 " +
+                    "hover:text-blue-600 hover:bg-gray-50 hover:border-blue-600 " +
+                    "focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
+                        onClick={handleNewBabysitting}>Ajouter</button>
+            </div>
+
 
             {babySittings.length !==0 ?
                 (
@@ -47,14 +58,6 @@ function BabySittingList (){
                     </table>
                 ) : (<h4> Aucune garde durant cette période</h4>)
             }
-
-
-            <div>
-
-                <button className={"mx-1 px-4 py-1 text-sm text-blue-600 font-semibold rounded-full border border-blue-200 hover:text-white hover:bg-blue-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
-                    onClick={handleNewBabysitting}>Ajouter une présence</button>
-
-            </div>
         </div>
     )
 }

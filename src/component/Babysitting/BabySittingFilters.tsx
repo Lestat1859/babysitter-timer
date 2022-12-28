@@ -40,9 +40,9 @@ function BabySittingFilters() {
                 {selectedMonth} {selectedYear}
             </h4>
 
-            <div>
+            <div className={"mb-2"}>
                 <label>Sélectionner l'année : </label>
-                <select value={selectedYear} onChange={handleSelectYearChange}>
+                <select className={"p-1.5 border"} value={selectedYear} onChange={handleSelectYearChange}>
                     {years.map((year,index:number)=>(
                         <option key={`${year}-${index}`}>{year}</option>
                     ))}
@@ -50,7 +50,9 @@ function BabySittingFilters() {
             </div>
             <div>
                 {months.map((month,index)=>(
-                    <button className={"mx-1 px-4 py-1 text-sm text-blue-600 font-semibold rounded-full border border-blue-200 hover:text-white hover:bg-blue-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
+                    <button className={"mx-1 px-4 py-1 text-sm text-blue-600 font-semibold rounded-md border border-blue-600 " +
+                        "hover:text-white hover:bg-blue-600 hover:border-transparent " +
+                        "focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
                         key={`${month}-${index}`} onClick={()=>handleMonthButtonClick(month,index+1)}>{month}</button>
                 ))}
             </div>
