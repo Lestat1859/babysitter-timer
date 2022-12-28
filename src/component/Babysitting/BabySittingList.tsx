@@ -14,10 +14,10 @@ function BabySittingList (){
     }
 
     return(
-        <div className={"mb-5 pt-6 pb-8 px-8 max-w-3xl mx-auto bg-gray-100 rounded-xl shadow-lg items-center space-x-4" }>
+        <div className={"mb-5 pt-6 pb-8 px-8 max-w-3xl mx-auto bg-gray-100 rounded-xl shadow-lg items-center" }>
             <div className={"flex justify-between"}>
                 <div>
-                    <h2 className={" mb-3 text-xl font-semibold"}>
+                    <h2 className={"mb-3 text-xl font-semibold"}>
                         Liste des présences
                     </h2>
                     <p className={"text-gray-600 mb-2"}>Liste et détail des présences durant la période séléctionnée</p>
@@ -34,17 +34,7 @@ function BabySittingList (){
 
             {babySittings.length !==0 ?
                 (
-                    <table className={"mb-3 table-auto "}>
-                        <thead>
-                            <tr>
-                                <th className={"py-2 border border-slate-600 text-gray-50 font-medium bg-blue-500"}>Date</th>
-                                <th className={"py-2 border border-slate-600 text-gray-50 font-medium bg-blue-500"}>De</th>
-                                <th className={"py-2 border border-slate-600 text-gray-50 font-medium bg-blue-500"}>A</th>
-                                <th className={"py-2 border border-slate-600 text-gray-50 font-medium bg-blue-500"}>Durée</th>
-                                <th className={"py-2 border border-slate-600 text-gray-50 font-medium bg-blue-500"}></th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <>
                         {babySittings.map((durationItem, index)=>(
                                 <BabySittingElement
                                     key={`BabySittingElement-${index}`}
@@ -56,9 +46,8 @@ function BabySittingList (){
                             )
                         )
                         }
-                        </tbody>
-                    </table>
-                ) : (<h4> Aucune garde durant cette période</h4>)
+                    </>
+                ) : (<h4> Aucune garde durant cette période </h4>)
             }
         </div>
     )

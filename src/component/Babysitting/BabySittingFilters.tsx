@@ -34,7 +34,7 @@ function BabySittingFilters() {
 
 
     return (
-        <div className={"mb-5 pt-6 pb-8 px-8 max-w-3xl mx-auto bg-gray-100 rounded-xl shadow-lg items-center space-x-4" }>
+        <div className={"mb-5 pt-6 pb-8 px-8 max-w-3xl mx-auto bg-gray-100 rounded-xl shadow-lg items-center" }>
             <h2 className={"mb-3 text-xl font-semibold"}>Filtres</h2>
             <h4>
                 {selectedMonth} {selectedYear}
