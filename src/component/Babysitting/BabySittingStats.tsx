@@ -13,16 +13,16 @@ function BabySittingStats(){
                             <h2 className={"text-xl font-semibold"}>
                                 Statistiques
                             </h2>
-                            <div className={"flex justify-between"}>
-                                <div className={"my-3 mx-3 p-4 max-w-sm mx-auto bg-white rounded-xl shadow-lg items-center "}>
+                            <div className={"flex flex-wrap justify-between"}>
+                                <div className={"my-3 mx-3 p-4 w-min-42 mx-auto bg-white rounded-xl shadow-lg items-center "}>
                                     <p className={"pb-2 font-medium text-sm text-gray-500"}> Nombre de gardes  </p>
                                     <p className={"font-medium text-3xl text-gray-800"}> {totalBabySittings}</p>
                                 </div>
-                                <div className={"my-3 mx-3 p-4 max-w-sm mx-auto bg-white rounded-xl shadow-lg items-center "}>
+                                <div className={"my-3 mx-3 p-4 w-min-42 mx-auto bg-white rounded-xl shadow-lg items-center "}>
                                     <p className={"pb-2 font-medium text-sm text-gray-500"}> Durée Totale </p>
                                     <p className={"font-medium text-3xl text-gray-800"}> {totalBabySittingHours} heures</p>
                                 </div>
-                                <div className={"my-3 mx-3 p-4 max-w-sm mx-auto bg-white rounded-xl shadow-lg items-center "}>
+                                <div className={"my-3 mx-3 p-4 w-min-42 mx-auto bg-white rounded-xl shadow-lg items-center "}>
                                     <p className={"pb-2 font-medium text-sm text-gray-500"}> A déclarer </p>
                                     <p className={"font-medium text-3xl text-gray-800"}> {totalAmount} € </p>
                                 </div>

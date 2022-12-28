@@ -1,4 +1,4 @@
-import {Duration} from "date-fns";
+import {Duration, format} from "date-fns";
 import React from "react";
 import {deleteBabySittingToLocalStorage} from "../../services/BabySittingService";
 import {useRecoilState} from "recoil";
@@ -33,9 +33,9 @@ function BabySittingElement(props:DurationProps){
         <>
             <tr>
                 <td className={"px-2 border border-slate-700"}>{props.arrivalDate.toLocaleDateString()}</td>
-                <td className={"px-2 border border-slate-700"}>{props.arrivalDate.toLocaleTimeString()}</td>
-                <td className={"px-2 border border-slate-700"}>{props.departureDate.toLocaleTimeString()}</td>
-                <td className={"px-2 border border-slate-700"}>{props.duration.hours}h{props.duration.minutes}min</td>
+                <td className={"px-2 border border-slate-700"}>{format(props.arrivalDate,'HH:mm')}</td>
+                <td className={"px-2 border border-slate-700"}>{format(props.departureDate,'HH:mm')}</td>
+                <td className={"px-2 border border-slate-700"}>{props.duration.hours}h{props.duration.minutes}</td>
                 <td className={"px-2 border border-slate-700"}>
                     <button className={"px-3 py-1 text-sm text-blue-600 font-semibold rounded-full  " +
                         "hover:text-white hover:bg-blue-600 hover:border-transparent " +

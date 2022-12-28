@@ -82,10 +82,10 @@ function AuthContainer(){
                         "focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
                             onClick={signUp} type="submit">
                         <div className={"flex items-center"}>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 pr-2">
+                            <p className={"mr-2"}>S'inscrire</p>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12" />
                             </svg>
-                            <p>S'inscrire</p>
                         </div>
                     </button>
                     <button className={"mx-1 px-4 py-1 text-sm text-blue-600 font-semibold rounded-md border border-blue-600 " +
@@ -93,10 +93,10 @@ function AuthContainer(){
                         "focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
                             onClick={signIn} type="submit">
                         <div className={"flex items-center"}>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 pr-2">
+                            <p className={"mr-2"}>Se connecter</p>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
                             </svg>
-                            <p>Se connecter</p>
                         </div>
                     </button>
                 </div>

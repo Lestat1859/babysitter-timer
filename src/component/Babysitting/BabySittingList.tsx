@@ -26,20 +26,22 @@ function BabySittingList (){
                 <button className={"mx-1 px-4 py-1 h-8 text-sm  bg-blue-600 text-gray-50 font-semibold rounded-md border border-blue-600 " +
                     "hover:text-blue-600 hover:bg-gray-50 hover:border-blue-600 " +
                     "focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
-                        onClick={handleNewBabysitting}>Ajouter</button>
+                        onClick={handleNewBabysitting}>
+                    Ajouter
+                </button>
             </div>
 
 
             {babySittings.length !==0 ?
                 (
-                    <table className={"mb-3 table-auto"}>
+                    <table className={"mb-3 table-auto "}>
                         <thead>
                             <tr>
                                 <th className={"py-2 border border-slate-600 text-gray-50 font-medium bg-blue-500"}>Date</th>
-                                <th className={"py-2 border border-slate-600 text-gray-50 font-medium bg-blue-500"}>Arrivée</th>
-                                <th className={"py-2 border border-slate-600 text-gray-50 font-medium bg-blue-500"}>Départ</th>
+                                <th className={"py-2 border border-slate-600 text-gray-50 font-medium bg-blue-500"}>De</th>
+                                <th className={"py-2 border border-slate-600 text-gray-50 font-medium bg-blue-500"}>A</th>
                                 <th className={"py-2 border border-slate-600 text-gray-50 font-medium bg-blue-500"}>Durée</th>
-                                <th className={"py-2 border border-slate-600 text-gray-50 font-medium bg-blue-500"}>Actions</th>
+                                <th className={"py-2 border border-slate-600 text-gray-50 font-medium bg-blue-500"}></th>
                             </tr>
                         </thead>
                         <tbody>
