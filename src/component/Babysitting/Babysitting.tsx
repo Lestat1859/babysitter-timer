@@ -3,7 +3,11 @@ import {Duration, format} from "date-fns";
 import {calculateDurationBetweenTwoDates, dateStringToDate} from '../../utils/dates'
 import {useNavigate, useParams} from "react-router-dom";
 import {useRecoilState} from "recoil";
-import {addBabySittingToLocalStorage, updateBabySittingToLocalStorage} from "../../services/BabySittingService";
+import {
+    addBabySittingToLocalStorage,
+    deleteBabySittingToLocalStorage,
+    updateBabySittingToLocalStorage
+} from "../../services/BabySittingService";
 import {babysittingState} from '../../recoil/recoil_states'
 import { v4 as uuidv4 } from 'uuid';
 import {IbabySitting} from "../../interfaces/IbabySitting";
@@ -32,6 +36,15 @@ function Babysitting(){
         }
         else{
             alert("Vous devez saisir une durée supérieur a 0 avant de pouvoir enregistrer ")
+        }
+    }
+
+    function deleteBabySitting(){
+        const idBabySittingToDelete = idBabysitting || "";
+        const okToDelete:boolean = window.confirm("Voulez-vous vraiment supprimer cette saisie ?");
+        if (okToDelete) {
+            deleteBabySittingToLocalStorage(idBabySittingToDelete);
+            setBabySittings(babySittings.filter((babySitting) => babySitting.id !== idBabySittingToDelete))
         }
     }
 
@@ -141,9 +154,9 @@ function Babysitting(){
                         <p className={"pb-2 font-medium text-sm text-gray-500"}> Durée </p>
                         <p className={"font-medium text-3xl text-gray-800"}> {duration.hours } h {duration.minutes || 0}</p>
                     </div>
-                    <button className={"px-4 py-1 w-max text-sm text-blue-600 font-semibold align-center rounded-md border border-blue-600 " +
-                        "hover:text-white hover:bg-blue-600 hover:border-transparent " +
-                        "focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
+                    <button className={"px-4 py-1 w-max text-sm text-green-600 font-semibold align-center rounded-md border border-green-600 " +
+                        "hover:text-white hover:bg-green-600 hover:border-transparent " +
+                        "focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"}
                             onClick={handleCalculateClick}> Calculer </button>
                 </div>
             </div>
@@ -160,10 +173,10 @@ function Babysitting(){
                     "focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
                         onClick={handleReturn}>
                     <div className={"flex items-center"}>
-                        <p className={"mr-2"}>Retour</p>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
                         </svg>
+                        <p className={"ml-2"}>Retour</p>
                     </div>
                 </button>
 
@@ -172,13 +185,32 @@ function Babysitting(){
                     "focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
                     onClick={handleSave}>
                     <div className={"flex items-center"}>
-                        <p className={"mr-2"}>Enregistrer</p>
                         <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
                             <path d="M3 19V5a2 2 0 012-2h11.172a2 2 0 011.414.586l2.828 2.828A2 2 0 0121 7.828V19a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.5"></path>
                             <path d="M8.6 9h6.8a.6.6 0 00.6-.6V3.6a.6.6 0 00-.6-.6H8.6a.6.6 0 00-.6.6v4.8a.6.6 0 00.6.6zM6 13.6V21h12v-7.4a.6.6 0 00-.6-.6H6.6a.6.6 0 00-.6.6z" stroke="currentColor" stroke-width="1.5"></path>
                         </svg>
+                        <p className={"ml-2"}>Enregistrer</p>
                     </div>
                 </button>
+
+
+                {idBabysitting!==undefined ? (
+                    <button className={"mx-1 mb-2 px-4 py-1 text-sm text-red-600 font-semibold rounded-md border border-red-600 " +
+                    "hover:text-white hover:bg-red-600 hover:border-transparent " +
+                    "focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"}
+                            onClick={deleteBabySitting}>
+                    <div className={"flex items-center"}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 hover:text-white">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p className={"ml-2"}>Supprimer</p>
+                    </div>
+                </button>
+                ):
+                    (<></>)
+                }
+
+
             </div>
 
             <p></p>
