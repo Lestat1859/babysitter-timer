@@ -38,7 +38,6 @@ function Babysitting(){
             alert("Vous devez saisir une durée supérieur a 0 avant de pouvoir enregistrer ")
         }
     }
-
     function deleteBabySitting(){
         const idBabySittingToDelete = idBabysitting || "";
         const okToDelete:boolean = window.confirm("Voulez-vous vraiment supprimer cette saisie ?");
@@ -73,21 +72,30 @@ function Babysitting(){
 
     function handleArrivalTimeChange(event:any){
         const dateTemp = event.target.value.split(":");
-        setArrivalDate(new Date(arrivalDate.getFullYear(),arrivalDate.getMonth(),arrivalDate.getDate(),dateTemp[0],dateTemp[1],0,0));
+        const newDate:Date = new Date(arrivalDate.getFullYear(),arrivalDate.getMonth(),arrivalDate.getDate(),dateTemp[0],dateTemp[1],0,0)
+        setArrivalDate(newDate);
+        setDuration(calculateDurationBetweenTwoDates(newDate,departureDate));
     };
     function handleDepartureTimeChange(event:any){
         const dateTemp = event.target.value.split(":");
-        setDepartureDate(new Date(departureDate.getFullYear(),departureDate.getMonth(),departureDate.getDate(),dateTemp[0],dateTemp[1],0,0));
+        const newDate:Date = new Date(departureDate.getFullYear(),departureDate.getMonth(),departureDate.getDate(),dateTemp[0],dateTemp[1],0,0)
+        setDepartureDate(newDate);
+        setDuration(calculateDurationBetweenTwoDates(arrivalDate,newDate));
     };
     function handleArrivalDateChange(event:any){
         const newDate:Date = dateStringToDate(event.target.value);
-        setArrivalDate((new Date(newDate.getFullYear(),newDate.getMonth(),newDate.getDate(),arrivalDate.getHours(),arrivalDate.getMinutes(),0,0)));
-        setDepartureDate((new Date(newDate.getFullYear(),newDate.getMonth(),newDate.getDate(),departureDate.getHours(),departureDate.getMinutes(),0,0)))
+        const newArrivalDate:Date = new Date(newDate.getFullYear(),newDate.getMonth(),newDate.getDate(),arrivalDate.getHours(),arrivalDate.getMinutes(),0,0);
+        const newDepartureDate:Date = new Date(newDate.getFullYear(),newDate.getMonth(),newDate.getDate(),departureDate.getHours(),departureDate.getMinutes(),0,0)
+        setArrivalDate(newArrivalDate);
+        setDepartureDate(newDepartureDate);
+        setDuration(calculateDurationBetweenTwoDates(newArrivalDate,newDepartureDate));
     };
-
     function handleDepartureDateChange(event:any){
         const newDate:Date = dateStringToDate(event.target.value);
-        setDepartureDate((new Date(newDate.getFullYear(),newDate.getMonth(),newDate.getDate(),departureDate.getHours(),departureDate.getMinutes(),0,0)));
+        const newDepartureDate:Date = new Date(newDate.getFullYear(),newDate.getMonth(),newDate.getDate(),departureDate.getHours(),departureDate.getMinutes(),0,0);
+        setDepartureDate(newDepartureDate);
+        setDuration(calculateDurationBetweenTwoDates(arrivalDate,newDepartureDate));
+
     };
 
     function calculateDuration(){

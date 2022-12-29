@@ -1,6 +1,7 @@
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {lastThreeYears} from "../../utils/dates";
 import {format} from "date-fns";
+import { fr } from 'date-fns/locale';
 import {babysittingFilterState} from "../../recoil/recoil_states";
 import {useRecoilState} from "recoil";
 
@@ -8,11 +9,27 @@ import {useRecoilState} from "recoil";
 const years:number[] = lastThreeYears(new Date().getFullYear());
 const months:string[] = ["Janvier","Février", "Mars", "Avril", "Mai", "Juin", "juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
 
+
+
 function BabySittingFilters() {
+    const actualMonth:string = format(new Date(),'MMMM',{ locale: fr }).slice(0, 1)
+        .toUpperCase()
+        .concat(format(new Date(),'MMMM',{ locale: fr }).slice(1));
 
     const [selectedYear,setSelectedYear] =  useState<number>(new Date().getFullYear());
-    const [selectedMonth, setSelectedMonth] = useState<string>(format(new Date(),'MMMM'));
+    const [selectedMonth, setSelectedMonth] = useState<string>(actualMonth);
     const [filter, setFilter] = useRecoilState(babysittingFilterState);
+    const buttons = useRef([]);
+
+
+    useEffect(() => {
+        if (selectedMonth!== undefined){giveFocus(selectedMonth)}
+    }, []);
+
+    function giveFocus(index:string){
+        // @ts-ignore
+        buttons.current[index].focus();
+    }
 
     function handleSelectYearChange(event:any){
         //console.log('handler : ' + event.target.value)
@@ -50,14 +67,17 @@ function BabySittingFilters() {
             </div>
             <div className={"flex overflow-x-scroll scrollbar-hide scroll-smooth md:flex-wrap md:overflow-hidden"}>
                 {months.map((month,index)=>(
-                    <button className={"mb-2 mr-2 px-4 py-2 text-sm text-blue-600 font-semibold rounded-md border border-blue-600 " +
+                    <button ref={(input) => {
+                        // @ts-ignore
+                        buttons.current[month] = input;
+                    }}
+                        className={"mb-2 mr-2 px-4 py-2 text-sm text-blue-600 font-semibold rounded-md border border-blue-600 " +
                         "hover:text-white hover:bg-blue-600 hover:border-transparent"}
                         key={`${month}-${index}`} onClick={()=>handleMonthButtonClick(month,index+1)}>{month}</button>
                 ))}
             </div>
         </div>
     )
-
 }
 
 export default BabySittingFilters
