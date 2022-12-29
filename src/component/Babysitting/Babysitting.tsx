@@ -47,7 +47,6 @@ function Babysitting(){
             setBabySittings(babySittings.filter((babySitting) => babySitting.id !== idBabySittingToDelete))
         }
     }
-
     function addBabysitting(){
         const babySitting = {
             id:uuidv4(),
@@ -76,18 +75,19 @@ function Babysitting(){
         const dateTemp = event.target.value.split(":");
         setArrivalDate(new Date(arrivalDate.getFullYear(),arrivalDate.getMonth(),arrivalDate.getDate(),dateTemp[0],dateTemp[1],0,0));
     };
-
     function handleDepartureTimeChange(event:any){
         const dateTemp = event.target.value.split(":");
         setDepartureDate(new Date(departureDate.getFullYear(),departureDate.getMonth(),departureDate.getDate(),dateTemp[0],dateTemp[1],0,0));
     };
-
     function handleArrivalDateChange(event:any){
-        setArrivalDate(dateStringToDate(event.target.value));
+        const newDate:Date = dateStringToDate(event.target.value);
+        setArrivalDate((new Date(newDate.getFullYear(),newDate.getMonth(),newDate.getDate(),arrivalDate.getHours(),arrivalDate.getMinutes(),0,0)));
+        setDepartureDate((new Date(newDate.getFullYear(),newDate.getMonth(),newDate.getDate(),departureDate.getHours(),departureDate.getMinutes(),0,0)))
     };
 
     function handleDepartureDateChange(event:any){
-        setDepartureDate(dateStringToDate(event.target.value));
+        const newDate:Date = dateStringToDate(event.target.value);
+        setDepartureDate((new Date(newDate.getFullYear(),newDate.getMonth(),newDate.getDate(),departureDate.getHours(),departureDate.getMinutes(),0,0)));
     };
 
     function calculateDuration(){
@@ -119,7 +119,7 @@ function Babysitting(){
     return(
         <section className={"mt-24 pt-6 pb-6 px-8 max-w-lg mx-auto bg-gray-100 rounded-xl shadow-lg items-center"}>
 
-            <h2 className={"mb-4 text-2xl font-semibold"}> Saisie d'une présence</h2>
+            <h2 className={"mb-4 text-2xl font-semibold"}> {idBabysitting!==undefined ? "Modification d'une présence" : "Saisie d'une présence"}</h2>
 
             <div className={"flex flex-row flex-wrap justify-between"}>
                 <div>
@@ -131,7 +131,7 @@ function Babysitting(){
 
                         <div className={"mb-1 flex flex-col"}>
                             <label> Heure d'arrivée : </label>
-                            <input  className={"border p-1.5"} type="time" value={format(arrivalDate, "HH:mm")} onChange={handleArrivalTimeChange} />
+                            <input  className={"border p-1.5"} type="time" value={format(arrivalDate, "HH:mm")} step="300" onChange={handleArrivalTimeChange} />
                         </div>
                     </div>
 
@@ -149,15 +149,24 @@ function Babysitting(){
                     </div>
                 </div>
 
-                <div>
+                <div className={"w-36"}>
                     <div className={"my-3 p-4 w-36 mx-auto h-28 bg-white rounded-xl shadow-lg items-center "}>
                         <p className={"pb-2 font-medium text-sm text-gray-500"}> Durée </p>
                         <p className={"font-medium text-3xl text-gray-800"}> {duration.hours } h {duration.minutes || 0}</p>
                     </div>
-                    <button className={"px-4 py-1 w-max text-sm text-green-600 font-semibold align-center rounded-md border border-green-600 " +
+                    <button className={"px-4 py-2 w-full text-sm text-green-600 font-semibold align-center rounded-md border border-green-600 " +
                         "hover:text-white hover:bg-green-600 hover:border-transparent " +
                         "focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"}
-                            onClick={handleCalculateClick}> Calculer </button>
+                            onClick={handleCalculateClick}>
+
+                        <div className={"flex items-center justify-between"}>
+                            <div className={""}>Calculer</div>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </button>
                 </div>
             </div>
 
@@ -168,7 +177,7 @@ function Babysitting(){
 
             <div className={"mt-6 flex flex-wrap justify-around"}>
 
-                <button className={"mx-1 mb-2 px-4 py-1 text-sm text-blue-600 font-semibold rounded-md border border-blue-600 " +
+                <button className={"mx-1 mb-2 px-4 py-2 text-sm text-blue-600 font-semibold rounded-md border border-blue-600 " +
                     "hover:text-white hover:bg-blue-600 hover:border-transparent " +
                     "focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
                         onClick={handleReturn}>
@@ -180,14 +189,14 @@ function Babysitting(){
                     </div>
                 </button>
 
-                <button className={"mx-1 mb-2 px-4 py-1 text-sm text-blue-600 font-semibold rounded-md border border-blue-600 " +
+                <button className={"mx-1 mb-2 px-4 py-2 text-sm text-blue-600 font-semibold rounded-md border border-blue-600 " +
                     "hover:text-white hover:bg-blue-600 hover:border-transparent " +
                     "focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
                     onClick={handleSave}>
                     <div className={"flex items-center"}>
-                        <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
-                            <path d="M3 19V5a2 2 0 012-2h11.172a2 2 0 011.414.586l2.828 2.828A2 2 0 0121 7.828V19a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.5"></path>
-                            <path d="M8.6 9h6.8a.6.6 0 00.6-.6V3.6a.6.6 0 00-.6-.6H8.6a.6.6 0 00-.6.6v4.8a.6.6 0 00.6.6zM6 13.6V21h12v-7.4a.6.6 0 00-.6-.6H6.6a.6.6 0 00-.6.6z" stroke="currentColor" stroke-width="1.5"></path>
+                        <svg width="24px" height="24px" strokeWidth="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+                            <path d="M3 19V5a2 2 0 012-2h11.172a2 2 0 011.414.586l2.828 2.828A2 2 0 0121 7.828V19a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor" strokeWidth="1.5"></path>
+                            <path d="M8.6 9h6.8a.6.6 0 00.6-.6V3.6a.6.6 0 00-.6-.6H8.6a.6.6 0 00-.6.6v4.8a.6.6 0 00.6.6zM6 13.6V21h12v-7.4a.6.6 0 00-.6-.6H6.6a.6.6 0 00-.6.6z" stroke="currentColor" strokeWidth="1.5"></path>
                         </svg>
                         <p className={"ml-2"}>Enregistrer</p>
                     </div>
@@ -195,7 +204,7 @@ function Babysitting(){
 
 
                 {idBabysitting!==undefined ? (
-                    <button className={"mx-1 mb-2 px-4 py-1 text-sm text-red-600 font-semibold rounded-md border border-red-600 " +
+                    <button className={"mx-1 mb-2 px-4 py-2 text-sm text-red-600 font-semibold rounded-md border border-red-600 " +
                     "hover:text-white hover:bg-red-600 hover:border-transparent " +
                     "focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"}
                             onClick={deleteBabySitting}>

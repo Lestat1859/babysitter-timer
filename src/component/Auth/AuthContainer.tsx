@@ -77,7 +77,7 @@ function AuthContainer(){
 
             <div>
                 <div className={"mt-6 flex justify-around"}>
-                    <button className={"mx-1 px-4 py-1 text-sm text-blue-600 font-semibold rounded-md border border-blue-600 " +
+                    <button className={"mx-1 px-4 py-2 text-sm text-blue-600 font-semibold rounded-md border border-blue-600 " +
                         "hover:text-white hover:bg-blue-600 hover:border-transparent " +
                         "focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
                             onClick={signUp} type="submit">
@@ -88,7 +88,7 @@ function AuthContainer(){
                             </svg>
                         </div>
                     </button>
-                    <button className={"mx-1 px-4 py-1 text-sm text-blue-600 font-semibold rounded-md border border-blue-600 " +
+                    <button className={"mx-1 px-4 py-2 text-sm text-blue-600 font-semibold rounded-md border border-blue-600 " +
                         "hover:text-white hover:bg-blue-600 hover:border-transparent " +
                         "focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
                             onClick={signIn} type="submit">
