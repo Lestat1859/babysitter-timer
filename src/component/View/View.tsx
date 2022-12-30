@@ -16,9 +16,9 @@ function View(){
                 <p className={"font-medium text-md text-gray-50 md:text-xl"}> Suivi des présences périscolaires</p>
                 <div className={"flex items-center"}>
 
-                    <p className={"mr-3 text-gray-50 hidden md:block"}>Bienvenue {currentUser} </p>
+                    <p className={"mr-3 text-gray-50 hidden md:block"}>Bienvenue {currentUser.email} </p>
                     {
-                        currentUser !== null ?
+                        currentUser.email !== "" ?
                             (<SignOutButton />) : (<></>)
                     }
                 </div>

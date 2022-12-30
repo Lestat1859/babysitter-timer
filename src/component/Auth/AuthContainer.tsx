@@ -12,7 +12,7 @@ function AuthContainer(){
         try {
             if (auth) {
                 const user = await signInWithEmailAndPassword(auth,email.value, password.value)
-                console.log("user", user)
+                console.log("user", user.user.email)
                 alert(`Welcome Back!`);
             }
         } catch (error : any) {
@@ -25,7 +25,7 @@ function AuthContainer(){
         try {
             if (auth) {
                 const user = await createUserWithEmailAndPassword(auth,email.value, password.value)
-                console.log("user", user)
+                console.log("user", user.user.email)
                 alert(`Welcome ${email.value}!`);
             }
         } catch (error : any) {

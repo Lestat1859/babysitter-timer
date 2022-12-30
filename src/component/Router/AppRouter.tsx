@@ -7,6 +7,7 @@ import Babysitting from "../Babysitting/Babysitting";
 import AuthContainer from "../Auth/AuthContainer";
 import {firebaseAuth} from "../../utils/firebase";
 import {isUserInAuthWhiteList} from "../../utils/auth";
+import {defaultAuth} from "../../interfaces/IAuth";
 
 
 
@@ -42,7 +43,7 @@ const publicRouter = createBrowserRouter ([
 
 function AppRouter(){
 
-    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState(defaultAuth);
 
     useEffect(() => {
         const auth = firebaseAuth;
@@ -51,23 +52,26 @@ function AppRouter(){
             auth.onAuthStateChanged((authUser:any) => {
                 if (authUser) {
                     if (isUserInAuthWhiteList(authUser.email)){
-                        setCurrentUser(authUser.email);
+                        setCurrentUser({
+                            id: authUser.uid,
+                            email: authUser.email});
                     }else{
-                        setCurrentUser(null);
+                        setCurrentUser(defaultAuth);
                         alert("Access Denied")
                     }
                 } else {
-                    setCurrentUser(null);
+                    setCurrentUser(defaultAuth);
                 }
             });
         }
+
     }, []);
 
     return (
         <RecoilRoot>
             <React.Suspense fallback={<div>Loading...</div>}>
                 <AuthContext.Provider value={currentUser}>
-                    {currentUser !== null ? (
+                    {(currentUser.email !== "") && (currentUser.email != "null") ? (
                         <RouterProvider router={privateRouter} />
                     ):(
                         <RouterProvider router={publicRouter} />
