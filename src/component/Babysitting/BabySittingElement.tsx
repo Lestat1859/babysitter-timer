@@ -30,7 +30,7 @@ function BabySittingElement(props:DurationProps){
 
 
     return (
-        <section className={"p-2 border flex justify-between"}>
+        <section className={"p-2 border flex justify-between bg-white"}>
 
             <div>
                 <p className={"mb-0.5 font-semibold "}> Le {props.arrivalDate.toLocaleDateString()}</p>
