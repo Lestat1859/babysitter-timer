@@ -4,13 +4,14 @@ import {calculateDurationBetweenTwoDates, dateStringToDate} from '../../utils/da
 import {useNavigate, useParams} from "react-router-dom";
 import {useRecoilState} from "recoil";
 import {
+    addBabySittingToFireBase,
     addBabySittingToLocalStorage,
     deleteBabySittingToLocalStorage,
     updateBabySittingToLocalStorage
 } from "../../services/BabySittingService";
 import {babysittingState} from '../../recoil/recoil_states'
 import { v4 as uuidv4 } from 'uuid';
-import {IbabySitting} from "../../interfaces/IbabySitting";
+import {IBabySitting} from "../../interfaces/IBabySitting";
 
 function Babysitting(){
     const emptyDuration:Duration = {years:0,months:0,days:0,hours:0,minutes:0,seconds:0};
@@ -55,15 +56,17 @@ function Babysitting(){
         }
         addBabySittingToLocalStorage(babySitting);
         setBabySittings([...babySittings, babySitting]);
+        addBabySittingToFireBase(babySitting);
+        console.table(babySitting);
     }
     function updateBabysitting(){
-        const babySitting:IbabySitting = {
+        const babySitting:IBabySitting = {
             id:idBabysitting || "",
             arrivalDate: arrivalDate,
             departureDate: departureDate,
             duration:duration
         }
-        let babySitingsUpdated:IbabySitting[] = babySittings.slice();
+        let babySitingsUpdated:IBabySitting[] = babySittings.slice();
         const babysittingPosition:number = babySitingsUpdated.findIndex((babysitting)=>babysitting.id===idBabysitting)
         babySitingsUpdated[babysittingPosition] = babySitting;
         updateBabySittingToLocalStorage(babySitting);

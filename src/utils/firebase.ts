@@ -2,6 +2,8 @@
 import { initializeApp } from "firebase/app";
 //import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
+import { getDatabase } from "firebase/database";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -14,15 +16,13 @@ const firebaseConfig = {
     storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
     messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
     appId: process.env.REACT_APP_FIREBASE_APP_ID,
+    databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
     measurementId: process.env.REACT_APP_MEASUREMENT_ID
-};
 
+};
 // Initialize Firebase
 export const firebaseApp = initializeApp(firebaseConfig);
 export const firebaseAuth = getAuth(firebaseApp);
-
-
-
-
+export const firebaseDatabase = getDatabase(firebaseApp);
 
 //const analytics = getAnalytics(firebaseApp);
