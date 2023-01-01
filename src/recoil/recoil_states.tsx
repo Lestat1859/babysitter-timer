@@ -36,7 +36,7 @@ const filteredBabySittingState = selector({
                 listBabySittings = listBabySittings.filter((babysitting)=>babysitting.arrivalDate.getMonth()+1==filteredList.month)
             }
         }
-        return listBabySittings
+        return listBabySittings.sort((babySittingA:any, babySittingB:any)=>babySittingB.arrivalDate-babySittingA.arrivalDate)
     }
 });
 
