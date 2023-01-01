@@ -7,7 +7,7 @@ import SignOutButton from "../Auth/SignOutButton";
 import AuthContext from "../../context/auth-context";
 import {useRecoilState} from "recoil";
 import {babysittingState} from "../../recoil/recoil_states";
-import {child, get, ref} from "firebase/database";
+import {child, get, ref,onValue} from "firebase/database";
 import {IBabySitting} from "../../interfaces/IBabySitting";
 import {firebaseDatabase} from "../../utils/firebase";
 
@@ -16,29 +16,26 @@ function View(){
     const currentUser=useContext(AuthContext);
     const [babysittings, setBabysittings] = useRecoilState(babysittingState);
 
-    function fetchBabySittingFromFireBase(){
+    function fetchBabySittingFromFireBase() {
         const dbRef = ref(firebaseDatabase);
-        get(child(dbRef, `Iloukia/`)).then((snapshot) => {
+        const path = "Iloukia/";
+        onValue(child(dbRef, path), (snapshot) => {
             if (snapshot.exists()) {
-                const babysittingsFetched:any = [];
-                snapshot.forEach((babysittingInFirebase)=>{
-                    const babysitting:IBabySitting = {
-                        id:babysittingInFirebase.key || "" ,
-                        arrivalDate:new Date(babysittingInFirebase.val().arrivalDate),
-                        departureDate:new Date(babysittingInFirebase.val().departureDate),
-                        duration:babysittingInFirebase.val().duration
+                const babysittingsFetched: any = [];
+                snapshot.forEach((babysittingInFirebase) => {
+                    const babysitting: IBabySitting = {
+                        id: babysittingInFirebase.key || "",
+                        arrivalDate: new Date(babysittingInFirebase.val().arrivalDate),
+                        departureDate: new Date(babysittingInFirebase.val().departureDate),
+                        duration: babysittingInFirebase.val().duration
                     }
                     babysittingsFetched.push(babysitting);
                 })
                 setBabysittings(babysittingsFetched);
-            } else {
             }
-        }).catch((error) => {
-            console.error(error);
         });
+
     }
-
-
     useEffect(() => {
             fetchBabySittingFromFireBase()
     }, []);
