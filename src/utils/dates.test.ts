@@ -8,7 +8,7 @@ import {
     monthNumberToMonthString,
     formatDurationsInHours
 } from './dates'
-import {IbabySitting} from "../interfaces/IbabySitting";
+import {IBabySitting} from "../interfaces/IBabySitting";
 
 const mockedStartDate:Date = new Date('1970-01-01T00:00:00.000');
 const mockedEndDate:Date = new Date('1970-01-01T02:00:00.000');
@@ -37,7 +37,7 @@ const mockedBabySittingFromLocalStorage:string = `
 `
 
 it('should get the year from local storage date',  () => {
-    const babySitings:IbabySitting[] = JSON.parse(mockedBabySittingFromLocalStorage);
+    const babySitings:IBabySitting[] = JSON.parse(mockedBabySittingFromLocalStorage);
     babySitings[0].arrivalDate = new Date(babySitings[0].arrivalDate);
     expect(babySitings[0].arrivalDate.getFullYear()).toEqual(2022);
 });

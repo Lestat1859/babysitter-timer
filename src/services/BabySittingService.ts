@@ -1,31 +1,29 @@
-import {IbabySitting} from "../interfaces/IbabySitting";
+import { IBabySitting } from "../interfaces/IBabySitting";
+import { firebaseDatabase } from "../utils/firebase";
+import { set, ref, remove} from "firebase/database";
 
-function addBabySittingToLocalStorage(babySitting: IbabySitting){
-    let babySitings:IbabySitting[] = fetchBabySittingsFromLocalStorage();
+function addBabySittingToLocalStorage(babySitting: IBabySitting){
+    let babySitings:IBabySitting[] = fetchBabySittingsFromLocalStorage();
     babySitings.push(babySitting);
     localStorage.setItem('babySittings', JSON.stringify(babySitings));
 }
 
-function updateBabySittingToLocalStorage(babySittingToUpdate: IbabySitting){
-    let babySitings:IbabySitting[] = fetchBabySittingsFromLocalStorage();
+function updateBabySittingToLocalStorage( babySittingToUpdate: IBabySitting){
+    let babySitings:IBabySitting[] = fetchBabySittingsFromLocalStorage();
     const babisittingPosition:number = babySitings.findIndex((babySitting)=>babySitting.id===babySittingToUpdate.id);
     babySitings[babisittingPosition] = babySittingToUpdate;
     localStorage.setItem('babySittings', JSON.stringify(babySitings));
 }
 
-
-
-function deleteBabySittingToLocalStorage(id:string){
-    let babySittings: IbabySitting[] = fetchBabySittingsFromLocalStorage();
-    babySittings = babySittings.filter((babySitting) => babySitting.id !== id);
+function deleteBabySittingToLocalStorage(babySittingId:string){
+    let babySittings: IBabySitting[] = fetchBabySittingsFromLocalStorage();
+    babySittings = babySittings.filter((babySitting) => babySitting.id !== babySittingId);
     localStorage.setItem('babySittings', JSON.stringify(babySittings));
 }
 
-
-
-function fetchBabySittingsFromLocalStorage():IbabySitting[]{
+function fetchBabySittingsFromLocalStorage():IBabySitting[]{
     const babSittingLocalStorage:string = localStorage.getItem('babySittings') || "";
-    let babySitings:IbabySitting[] = [];
+    let babySitings:IBabySitting[] = [];
     if (babSittingLocalStorage !==""){
         babySitings = JSON.parse(babSittingLocalStorage);
         babySitings.forEach((babySitting)=>{
@@ -33,14 +31,36 @@ function fetchBabySittingsFromLocalStorage():IbabySitting[]{
             babySitting.departureDate = new Date(babySitting.departureDate)
         })
     }
-
     return babySitings;
 }
+
+function addBabySittingToFireBase(babySitting: IBabySitting){
+    return set(ref(firebaseDatabase, '/Iloukia/'+babySitting.id), {
+        arrivalDate:babySitting.arrivalDate.getTime(),
+        departureDate:babySitting.departureDate.getTime(),
+        duration:babySitting.duration
+    });
+}
+function updateBabySittingToFireBase(babySitting: IBabySitting){
+    return set(ref(firebaseDatabase, '/Iloukia/'+babySitting.id), {
+        arrivalDate:babySitting.arrivalDate.getTime(),
+        departureDate:babySitting.departureDate.getTime(),
+        duration:babySitting.duration
+    });
+}
+function deleteBabySittingToFireBase(idBabySitting: string){
+    return remove(ref(firebaseDatabase,'/Iloukia/'+idBabySitting))
+}
+
 
 
 export {
     addBabySittingToLocalStorage,
     deleteBabySittingToLocalStorage,
     fetchBabySittingsFromLocalStorage,
-    updateBabySittingToLocalStorage
+    updateBabySittingToLocalStorage,
+
+    addBabySittingToFireBase,
+    updateBabySittingToFireBase,
+    deleteBabySittingToFireBase
 };

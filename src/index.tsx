@@ -6,10 +6,6 @@ import reportWebVitals from './reportWebVitals';
 import AppRouter from "./component/Router/AppRouter";
 
 
-
-
-
-
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

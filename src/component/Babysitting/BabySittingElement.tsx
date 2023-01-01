@@ -1,6 +1,6 @@
 import {Duration, format} from "date-fns";
 import React from "react";
-import {deleteBabySittingToLocalStorage} from "../../services/BabySittingService";
+import {deleteBabySittingToFireBase} from "../../services/BabySittingService";
 import {useRecoilState} from "recoil";
 import {babysittingState} from "../../recoil/recoil_states";
 import { useNavigate } from "react-router-dom";
@@ -19,8 +19,9 @@ function BabySittingElement(props:DurationProps){
     function handleDelete(){
         const okToDelete:boolean = window.confirm("Voulez-vous vraiment supprimer cette saisie ?");
         if (okToDelete) {
-            deleteBabySittingToLocalStorage(props.id);
-            setBabySittings(babySittings.filter((babySitting) => babySitting.id !== props.id))
+            deleteBabySittingToFireBase(props.id).then(()=>{
+                setBabySittings(babySittings.filter((babySitting) => babySitting.id !== props.id));
+            })
         }
     }
 
@@ -30,7 +31,7 @@ function BabySittingElement(props:DurationProps){
 
 
     return (
-        <section className={"p-2 border flex justify-between"}>
+        <section className={"p-2 border flex justify-between bg-white"}>
 
             <div>
                 <p className={"mb-0.5 font-semibold "}> Le {props.arrivalDate.toLocaleDateString()}</p>
