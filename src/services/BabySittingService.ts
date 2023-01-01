@@ -1,6 +1,6 @@
 import { IBabySitting } from "../interfaces/IBabySitting";
 import { firebaseDatabase } from "../utils/firebase";
-import { getDatabase, set, ref,child, get } from "firebase/database";
+import { set, ref, remove} from "firebase/database";
 
 function addBabySittingToLocalStorage(babySitting: IBabySitting){
     let babySitings:IBabySitting[] = fetchBabySittingsFromLocalStorage();
@@ -42,21 +42,16 @@ function addBabySittingToFireBase(babySitting: IBabySitting){
     });
 }
 function updateBabySittingToFireBase(babySitting: IBabySitting){
-}
-function deleteBabySittingToFireBase(babySitting: IBabySitting){
-}
-function fetchBabySittingFromFireBase(){
-    const dbRef = ref(getDatabase());
-    get(child(dbRef, `iloukia/`)).then((snapshot) => {
-        if (snapshot.exists()) {
-            console.log(snapshot.val());
-        } else {
-            console.log("No data available");
-        }
-    }).catch((error) => {
-        console.error(error);
+    return set(ref(firebaseDatabase, '/Iloukia/'+babySitting.id), {
+        arrivalDate:babySitting.arrivalDate.getTime(),
+        departureDate:babySitting.departureDate.getTime(),
+        duration:babySitting.duration
     });
 }
+function deleteBabySittingToFireBase(idBabySitting: string){
+    return remove(ref(firebaseDatabase,'/Iloukia/'+idBabySitting))
+}
+
 
 
 export {
@@ -67,6 +62,5 @@ export {
 
     addBabySittingToFireBase,
     updateBabySittingToFireBase,
-    deleteBabySittingToFireBase,
-    fetchBabySittingFromFireBase
+    deleteBabySittingToFireBase
 };

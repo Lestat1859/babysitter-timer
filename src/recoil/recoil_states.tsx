@@ -11,9 +11,12 @@ const defaultBabysittingFilter:IBabysittingFilter = {
     month: new Date().getMonth()+1
 }
 
+const defaultBabysitting:IBabySitting[]=[];
+
 const babysittingState = atom({
     key: "babysittingState",
-    default: fetchBabySittingsFromLocalStorage()
+    //default: fetchBabySittingsFromLocalStorage()
+    default: defaultBabysitting
 });
 
 const babysittingFilterState = atom({

@@ -10,7 +10,6 @@ import {isUserInAuthWhiteList} from "../../utils/auth";
 import {defaultAuth} from "../../interfaces/IAuth";
 
 
-
 const privateRouter = createBrowserRouter([
     {
         path: "/",
@@ -45,6 +44,7 @@ function AppRouter(){
 
     const [currentUser, setCurrentUser] = useState(defaultAuth);
 
+
     useEffect(() => {
         const auth = firebaseAuth;
 
@@ -55,6 +55,7 @@ function AppRouter(){
                         setCurrentUser({
                             id: authUser.uid,
                             email: authUser.email});
+                            //fetchBabySittingFromFireBase();
                     }else{
                         setCurrentUser(defaultAuth);
                         alert("Access Denied")

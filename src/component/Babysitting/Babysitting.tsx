@@ -5,9 +5,8 @@ import {useNavigate, useParams} from "react-router-dom";
 import {useRecoilState} from "recoil";
 import {
     addBabySittingToFireBase,
-    addBabySittingToLocalStorage,
-    deleteBabySittingToLocalStorage,
-    updateBabySittingToLocalStorage
+    updateBabySittingToFireBase,
+    deleteBabySittingToFireBase
 } from "../../services/BabySittingService";
 import {babysittingState} from '../../recoil/recoil_states'
 import { v4 as uuidv4 } from 'uuid';
@@ -43,8 +42,10 @@ function Babysitting(){
         const idBabySittingToDelete = idBabysitting || "";
         const okToDelete:boolean = window.confirm("Voulez-vous vraiment supprimer cette saisie ?");
         if (okToDelete) {
-            deleteBabySittingToLocalStorage(idBabySittingToDelete);
-            setBabySittings(babySittings.filter((babySitting) => babySitting.id !== idBabySittingToDelete))
+            deleteBabySittingToFireBase(idBabySittingToDelete).then(()=>{
+                setBabySittings(babySittings.filter((babySitting) => babySitting.id !== idBabySittingToDelete));
+                navigate(-1);
+            })
         }
     }
     function addBabysitting(){
@@ -54,10 +55,11 @@ function Babysitting(){
             departureDate: departureDate,
             duration:duration
         }
-        addBabySittingToLocalStorage(babySitting);
-        setBabySittings([...babySittings, babySitting]);
-        addBabySittingToFireBase(babySitting);
-        console.table(babySitting);
+
+        addBabySittingToFireBase(babySitting).then(()=>{
+            setBabySittings([...babySittings, babySitting]);
+        });
+        //console.table(babySitting);
     }
     function updateBabysitting(){
         const babySitting:IBabySitting = {
@@ -69,8 +71,10 @@ function Babysitting(){
         let babySitingsUpdated:IBabySitting[] = babySittings.slice();
         const babysittingPosition:number = babySitingsUpdated.findIndex((babysitting)=>babysitting.id===idBabysitting)
         babySitingsUpdated[babysittingPosition] = babySitting;
-        updateBabySittingToLocalStorage(babySitting);
-        setBabySittings(babySitingsUpdated);
+
+        updateBabySittingToFireBase(babySitting).then(()=>{
+            setBabySittings(babySitingsUpdated);
+        });
     }
 
     function handleArrivalTimeChange(event:any){
@@ -165,19 +169,6 @@ function Babysitting(){
                         <p className={"pb-2 font-medium text-sm text-gray-500"}> Durée </p>
                         <p className={"font-medium text-3xl text-gray-800"}> {duration.hours } h {duration.minutes || 0}</p>
                     </div>
-                    <button className={"px-4 py-2 w-full text-sm text-green-600 font-semibold align-center rounded-md border border-green-600 " +
-                        "hover:text-white hover:bg-green-600 hover:border-transparent " +
-                        "focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"}
-                            onClick={handleCalculateClick}>
-
-                        <div className={"flex items-center justify-between"}>
-                            <div className={""}>Calculer</div>
-
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                    </button>
                 </div>
             </div>
 
