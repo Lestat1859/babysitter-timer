@@ -1,20 +1,19 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import {lastThreeYears} from "../../utils/dates";
 import {format} from "date-fns";
 import { fr } from 'date-fns/locale';
 import {babysittingFilterState} from "../../recoil/recoil_states";
 import {useRecoilState} from "recoil";
 
-
-const years:number[] = lastThreeYears(new Date().getFullYear());
-const months:string[] = ["Janvier","Février", "Mars", "Avril", "Mai", "Juin", "juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-
-
-
 function BabySittingFilters() {
-    const actualMonth:string = format(new Date(),'MMMM',{ locale: fr }).slice(0, 1)
-        .toUpperCase()
-        .concat(format(new Date(),'MMMM',{ locale: fr }).slice(1));
+    const years = useMemo(() => lastThreeYears(new Date().getFullYear()), []);
+    const months:string[] = useMemo(() => ["Janvier","Février", "Mars", "Avril", "Mai", "Juin", "juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"], []);;
+    const actualMonth = useMemo(() => {
+        return format(new Date(),'MMMM',{ locale: fr })
+            .slice(0, 1)
+            .toUpperCase()
+            .concat(format(new Date(),'MMMM',{ locale: fr }).slice(1));
+    }, []);
 
     const [selectedYear,setSelectedYear] =  useState<number>(new Date().getFullYear());
     const [selectedMonth, setSelectedMonth] = useState<string>(actualMonth);
@@ -25,6 +24,11 @@ function BabySittingFilters() {
     useEffect(() => {
         if (selectedMonth!== undefined){giveFocus(selectedMonth)}
     }, []);
+
+
+    useEffect(() => {
+       console.log("selected month changed");
+    }, [selectedMonth]);
 
     function giveFocus(index:string){
         // @ts-ignore
