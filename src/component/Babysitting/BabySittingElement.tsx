@@ -49,8 +49,6 @@ function BabySittingElement(props:DurationProps){
             </div>
 
             <div className={"flex"}>
-
-
                 <button className={"px-3 py-2 text-sm text-gray-600 font-semibold rounded-full md:hidden " +
                     "hover:text-white hover:bg-blue-600 hover:border-transparent " +
                     "focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
