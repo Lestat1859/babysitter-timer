@@ -4,10 +4,11 @@ import {format} from "date-fns";
 import { fr } from 'date-fns/locale';
 import {babysittingFilterState} from "../../recoil/recoil_states";
 import {useRecoilState} from "recoil";
+import {monthList} from "../../utils/months";
 
 function BabySittingFilters() {
     const years = useMemo(() => lastThreeYears(new Date().getFullYear()), []);
-    const months:string[] = useMemo(() => ["Janvier","Février", "Mars", "Avril", "Mai", "Juin", "juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"], []);;
+    const months:string[] = useMemo(() => monthList, []);;
     const actualMonth = useMemo(() => {
         return format(new Date(),'MMMM',{ locale: fr })
             .slice(0, 1)
@@ -26,17 +27,12 @@ function BabySittingFilters() {
     }, []);
 
 
-    useEffect(() => {
-       console.log("selected month changed");
-    }, [selectedMonth]);
-
     function giveFocus(index:string){
         // @ts-ignore
         buttons.current[index].focus();
     }
 
     function handleSelectYearChange(event:any){
-        //console.log('handler : ' + event.target.value)
         setSelectedYear(event.target.value)
         setFilter({
             ...filter,
