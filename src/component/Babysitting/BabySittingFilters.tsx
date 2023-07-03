@@ -6,6 +6,16 @@ import {babysittingFilterState} from "../../recoil/recoil_states";
 import {useRecoilState} from "recoil";
 import {monthList} from "../../utils/months";
 
+
+const defaultButtonStyle:string = `mb-2 mr-2 px-4 py-2 
+                                    text-sm text-blue-600 font-semibold 
+                                    bg-white rounded-md 
+                                    border border-blue-600 
+                                    hover:text-white hover:bg-blue-600 hover:border-transparent
+                                    focus:text-white focus:bg-blue-600 focus:border-transparent`;
+
+
+
 function BabySittingFilters() {
     const years = useMemo(() => lastThreeYears(new Date().getFullYear()), []);
     const months:string[] = useMemo(() => monthList, []);;
@@ -59,7 +69,7 @@ function BabySittingFilters() {
 
             <div className={"mb-2"}>
                 <label>Sélectionner l'année : </label>
-                <select className={"p-1.5 border"} value={selectedYear} onChange={handleSelectYearChange}>
+                <select className={"p-1.5 border rounded-md border border-blue-600 text-blue-600"} value={selectedYear} onChange={handleSelectYearChange}>
                     {years.map((year,index:number)=>(
                         <option key={`${year}-${index}`}>{year}</option>
                     ))}
@@ -71,8 +81,12 @@ function BabySittingFilters() {
                         // @ts-ignore
                         buttons.current[month] = input;
                     }}
-                        className={"mb-2 mr-2 px-4 py-2 text-sm text-blue-600 font-semibold rounded-md border border-blue-600 " +
-                        "hover:text-white hover:bg-blue-600 hover:border-transparent"}
+                        className={`mb-2 mr-2 px-4 py-2 
+                                    text-sm text-blue-600 font-semibold 
+                                    bg-white rounded-md 
+                                    border border-blue-600 
+                                    hover:text-white hover:bg-blue-600 hover:border-transparent
+                                    focus:text-white focus:bg-blue-600 focus:border-transparent`}
                         key={`${month}-${index}`} onClick={()=>handleMonthButtonClick(month,index+1)}>{month}</button>
                 ))}
             </div>
