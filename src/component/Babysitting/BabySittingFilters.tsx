@@ -5,16 +5,7 @@ import { fr } from 'date-fns/locale';
 import {babysittingFilterState} from "../../recoil/recoil_states";
 import {useRecoilState} from "recoil";
 import {monthList} from "../../utils/months";
-
-
-const defaultButtonStyle:string = `mb-2 mr-2 px-4 py-2 
-                                    text-sm text-blue-600 font-semibold 
-                                    bg-white rounded-md 
-                                    border border-blue-600 
-                                    hover:text-white hover:bg-blue-600 hover:border-transparent
-                                    focus:text-white focus:bg-blue-600 focus:border-transparent`;
-
-
+import Buttons from "../Buttons/Buttons";
 
 function BabySittingFilters() {
     const years = useMemo(() => lastThreeYears(new Date().getFullYear()), []);
@@ -29,18 +20,6 @@ function BabySittingFilters() {
     const [selectedYear,setSelectedYear] =  useState<number>(new Date().getFullYear());
     const [selectedMonth, setSelectedMonth] = useState<string>(actualMonth);
     const [filter, setFilter] = useRecoilState(babysittingFilterState);
-    const buttons = useRef([]);
-
-
-    useEffect(() => {
-        if (selectedMonth!== undefined){giveFocus(selectedMonth)}
-    }, []);
-
-
-    function giveFocus(index:string){
-        // @ts-ignore
-        buttons.current[index].focus();
-    }
 
     function handleSelectYearChange(event:any){
         setSelectedYear(event.target.value)
@@ -56,9 +35,7 @@ function BabySittingFilters() {
             ...filter,
             month:monthNumber
         })
-
     }
-
 
     return (
         <div className={"mb-5 pt-6 pb-6 px-8 max-w-3xl mx-auto bg-gray-100 rounded-xl shadow-lg items-center" }>
@@ -77,17 +54,7 @@ function BabySittingFilters() {
             </div>
             <div className={"flex overflow-x-scroll scrollbar-hide scroll-smooth md:flex-wrap md:overflow-hidden"}>
                 {months.map((month,index)=>(
-                    <button ref={(input) => {
-                        // @ts-ignore
-                        buttons.current[month] = input;
-                    }}
-                        className={`mb-2 mr-2 px-4 py-2 
-                                    text-sm text-blue-600 font-semibold 
-                                    bg-white rounded-md 
-                                    border border-blue-600 
-                                    hover:text-white hover:bg-blue-600 hover:border-transparent
-                                    focus:text-white focus:bg-blue-600 focus:border-transparent`}
-                        key={`${month}-${index}`} onClick={()=>handleMonthButtonClick(month,index+1)}>{month}</button>
+                    <Buttons key={`${month}-${index}`}  label={month} clickFunction={()=>handleMonthButtonClick(month,index+1)} type={"standard"} ></Buttons>
                 ))}
             </div>
         </div>

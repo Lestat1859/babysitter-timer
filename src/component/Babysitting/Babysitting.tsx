@@ -11,6 +11,7 @@ import {
 import {babysittingState} from '../../recoil/recoil_states'
 import { v4 as uuidv4 } from 'uuid';
 import {IBabySitting} from "../../interfaces/IBabySitting";
+import Buttons from "../Buttons/Buttons";
 
 function Babysitting(){
     const emptyDuration:Duration = {years:0,months:0,days:0,hours:0,minutes:0,seconds:0};
@@ -172,60 +173,19 @@ function Babysitting(){
                 </div>
             </div>
 
-
             <div className={"mt-12 mb-1 ml-0 border-t border-gray-300"}>
             </div>
 
-
             <div className={"mt-6 flex flex-wrap justify-around"}>
-
-                <button className={"mx-1 mb-2 px-4 py-2 text-sm text-blue-600 font-semibold rounded-md border border-blue-600 " +
-                    "hover:text-white hover:bg-blue-600 hover:border-transparent " +
-                    "focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
-                        onClick={handleReturn}>
-                    <div className={"flex items-center"}>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
-                        </svg>
-                        <p className={"ml-2"}>Retour</p>
-                    </div>
-                </button>
-
-                <button className={"mx-1 mb-2 px-4 py-2 text-sm text-blue-600 font-semibold rounded-md border border-blue-600 " +
-                    "hover:text-white hover:bg-blue-600 hover:border-transparent " +
-                    "focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"}
-                    onClick={handleSave}>
-                    <div className={"flex items-center"}>
-                        <svg width="24px" height="24px" strokeWidth="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
-                            <path d="M3 19V5a2 2 0 012-2h11.172a2 2 0 011.414.586l2.828 2.828A2 2 0 0121 7.828V19a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor" strokeWidth="1.5"></path>
-                            <path d="M8.6 9h6.8a.6.6 0 00.6-.6V3.6a.6.6 0 00-.6-.6H8.6a.6.6 0 00-.6.6v4.8a.6.6 0 00.6.6zM6 13.6V21h12v-7.4a.6.6 0 00-.6-.6H6.6a.6.6 0 00-.6.6z" stroke="currentColor" strokeWidth="1.5"></path>
-                        </svg>
-                        <p className={"ml-2"}>Enregistrer</p>
-                    </div>
-                </button>
-
-
+                <Buttons label={"Retour"} clickFunction={handleReturn} type={"back"} iconImage={"back"} ></Buttons>
+                <Buttons label={"Enregistrer"} clickFunction={handleSave} type={"validate"} iconImage={"save"} ></Buttons>
                 {idBabysitting!==undefined ? (
-                    <button className={"mx-1 mb-2 px-4 py-2 text-sm text-red-600 font-semibold rounded-md border border-red-600 " +
-                    "hover:text-white hover:bg-red-600 hover:border-transparent " +
-                    "focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"}
-                            onClick={deleteBabySitting}>
-                    <div className={"flex items-center"}>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 hover:text-white">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <p className={"ml-2"}>Supprimer</p>
-                    </div>
-                </button>
+                    <Buttons label={"Supprimer"} clickFunction={deleteBabySitting} type={"cancel"} iconImage={"delete"} ></Buttons>
                 ):
                     (<></>)
                 }
-
-
             </div>
-
             <p></p>
-
         </section>
     )
 }
