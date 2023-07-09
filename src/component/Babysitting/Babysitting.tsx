@@ -176,6 +176,7 @@ function Babysitting(){
             <div className={"mt-12 mb-1 ml-0 border-t border-gray-300"}>
             </div>
 
+
             <div className={"mt-6 flex flex-wrap justify-around"}>
                 <Buttons label={"Retour"} clickFunction={handleReturn} type={"back"} iconImage={"back"} ></Buttons>
                 <Buttons label={"Enregistrer"} clickFunction={handleSave} type={"validate"} iconImage={"save"} ></Buttons>

@@ -49,6 +49,8 @@ function BabySittingElement(props:DurationProps){
             </div>
 
             <div className={"flex"}>
+                <Buttons label={""} clickFunction={handleUpdate} type={"transparentBgStyle"} iconImage={"detail"} hiddenMd={true}></Buttons>
+
                 <div className={"hidden md:block md:flex"}>
                     <Buttons label={""} clickFunction={handleUpdate} type={"standard"} iconImage={"edit"} ></Buttons>
                     <Buttons label={""} clickFunction={handleDelete} type={"cancel"} iconImage={"delete"} ></Buttons>
