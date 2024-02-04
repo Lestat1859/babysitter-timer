@@ -6,15 +6,40 @@ import BabySittingStats from "../Babysitting/BabySittingStats";
 import SignOutButton from "../Auth/SignOutButton";
 import AuthContext from "../../context/auth-context";
 import {useRecoilState} from "recoil";
-import {babysittingState} from "../../recoil/recoil_states";
+import {babysittingState, priceTimeIntervalState} from "../../recoil/recoil_states";
 import {child, get, ref,onValue} from "firebase/database";
 import {IBabySitting} from "../../interfaces/IBabySitting";
 import {firebaseDatabase} from "../../utils/firebase";
+import {IPriceTimeInterval} from "../../interfaces/IPriceTimeInterval";
 
 function View(){
 
     const currentUser=useContext(AuthContext);
     const [babysittings, setBabysittings] = useRecoilState(babysittingState);
+    const [priceTimerIntervals, setPriceTimerIntervals] = useRecoilState(priceTimeIntervalState)
+
+    function fetchPriceTimerintervalFromFirebase(){
+        const dbRef = ref(firebaseDatabase);
+        const path = "PriceTimeInterval/";
+        onValue(child(dbRef, path), (snapshot) => {
+            if (snapshot.exists()) {
+                const priceTimerintervalFetched: any = [];
+                snapshot.forEach((priceTimerintervalInFirebase) => {
+                    //console.table(priceTimerintervalInFirebase.val());
+                    const priceTimerinterval: IPriceTimeInterval = {
+                        begin: new Date(priceTimerintervalInFirebase.val().begin),
+                        end: new Date(priceTimerintervalInFirebase.val().end),
+                        price: priceTimerintervalInFirebase.val().price
+                    }
+                    priceTimerintervalFetched.push(priceTimerinterval);
+                })
+                setPriceTimerIntervals(priceTimerintervalFetched);
+            }
+        });
+
+
+    }
+
 
     function fetchBabySittingFromFireBase() {
         const dbRef = ref(firebaseDatabase);
@@ -37,7 +62,8 @@ function View(){
 
     }
     useEffect(() => {
-            fetchBabySittingFromFireBase()
+            fetchBabySittingFromFireBase();
+            fetchPriceTimerintervalFromFirebase();
     }, []);
 
 
@@ -46,6 +72,12 @@ function View(){
         console.log("Chargement View");
         console.table(babysittings);
     }, [babysittings]);
+
+
+    useEffect(() => {
+        console.log("Chargement View");
+        console.table(priceTimerIntervals);
+    }, [priceTimerIntervals]);
 */
 
     return(
