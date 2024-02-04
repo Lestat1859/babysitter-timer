@@ -6,6 +6,8 @@ import {babysittingFilterState} from "../../recoil/recoil_states";
 import {useRecoilState} from "recoil";
 import {monthList} from "../../utils/months";
 import Buttons from "../Buttons/Buttons";
+import {logEvent} from "firebase/analytics";
+import {fireBaseAnalytics} from "../../utils/firebase";
 
 function BabySittingFilters() {
     const years = useMemo(() => lastThreeYears(new Date().getFullYear()), []);
@@ -22,6 +24,7 @@ function BabySittingFilters() {
     const [filter, setFilter] = useRecoilState(babysittingFilterState);
 
     function handleSelectYearChange(event:any){
+        logEvent(fireBaseAnalytics,"filter_button_select_year");
         setSelectedYear(event.target.value)
         setFilter({
             ...filter,
@@ -30,6 +33,7 @@ function BabySittingFilters() {
     }
 
     function handleMonthButtonClick(monthString:string, monthNumber:number){
+        logEvent(fireBaseAnalytics,"filter_button_select_month");
         setSelectedMonth(monthString);
         setFilter({
             ...filter,

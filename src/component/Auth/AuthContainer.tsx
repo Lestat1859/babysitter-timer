@@ -1,6 +1,7 @@
 import useInput from "./useInput";
-import {firebaseAuth} from "../../utils/firebase";
+import {fireBaseAnalytics, firebaseAuth} from "../../utils/firebase";
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
+import {logEvent} from "firebase/analytics";
 
 
 function AuthContainer(){
@@ -9,6 +10,7 @@ function AuthContainer(){
     const auth = firebaseAuth;
 
     const signIn = async (event:any) => {
+        logEvent(fireBaseAnalytics,"auth_button_signIn");
         try {
             if (auth) {
                 const user = await signInWithEmailAndPassword(auth,email.value, password.value)
@@ -22,6 +24,7 @@ function AuthContainer(){
     };
 
     const signUp = async (event:any) => {
+        logEvent(fireBaseAnalytics,"auth_button_signUp");
         try {
             if (auth) {
                 const user = await createUserWithEmailAndPassword(auth,email.value, password.value)

@@ -7,10 +7,11 @@ import SignOutButton from "../Auth/SignOutButton";
 import AuthContext from "../../context/auth-context";
 import {useRecoilState} from "recoil";
 import {babysittingState, priceTimeIntervalState} from "../../recoil/recoil_states";
-import {child, get, ref,onValue} from "firebase/database";
+import {child, ref,onValue} from "firebase/database";
 import {IBabySitting} from "../../interfaces/IBabySitting";
-import {firebaseDatabase} from "../../utils/firebase";
+import {firebaseDatabase,fireBaseAnalytics} from "../../utils/firebase";
 import {IPriceTimeInterval} from "../../interfaces/IPriceTimeInterval";
+import {logEvent} from "firebase/analytics";
 
 function View(){
 
@@ -36,11 +37,7 @@ function View(){
                 setPriceTimerIntervals(priceTimerintervalFetched);
             }
         });
-
-
     }
-
-
     function fetchBabySittingFromFireBase() {
         const dbRef = ref(firebaseDatabase);
         const path = "Iloukia/";
@@ -64,6 +61,7 @@ function View(){
     useEffect(() => {
             fetchBabySittingFromFireBase();
             fetchPriceTimerintervalFromFirebase();
+            logEvent(fireBaseAnalytics, 'view_home');
     }, []);
 
 

@@ -12,6 +12,8 @@ import {babysittingState} from '../../recoil/recoil_states'
 import { v4 as uuidv4 } from 'uuid';
 import {IBabySitting} from "../../interfaces/IBabySitting";
 import Buttons from "../Buttons/Buttons";
+import {fireBaseAnalytics} from "../../utils/firebase";
+import {logEvent} from "firebase/analytics";
 
 function Babysitting(){
     const emptyDuration:Duration = {years:0,months:0,days:0,hours:0,minutes:0,seconds:0};
@@ -23,10 +25,13 @@ function Babysitting(){
     const { idBabysitting } = useParams() || "";
 
     function handleReturn(){
+        logEvent(fireBaseAnalytics,"babysitting_button_back");
         navigate(-1);
+
     }
 
     function handleSave(){
+        logEvent(fireBaseAnalytics,"babysitting_button_save");
         if ((duration.days !== 0) || (duration.hours !== 0) || (duration.minutes !== 0) || (duration.seconds !== 0)){
             if (idBabysitting!== undefined){
                 updateBabysitting();
@@ -36,13 +41,14 @@ function Babysitting(){
             navigate(-1);
         }
         else{
-            alert("Vous devez saisir une durée supérieur a 0 avant de pouvoir enregistrer ")
+            alert("Vous devez saisir une durée supérieur a 0 avant de pouvoir enregistrer ");
         }
     }
     function deleteBabySitting(){
         const idBabySittingToDelete = idBabysitting || "";
         const okToDelete:boolean = window.confirm("Voulez-vous vraiment supprimer cette saisie ?");
         if (okToDelete) {
+            logEvent(fireBaseAnalytics,"babysitting_button_delete");
             deleteBabySittingToFireBase(idBabySittingToDelete).then(()=>{
                 setBabySittings(babySittings.filter((babySitting) => babySitting.id !== idBabySittingToDelete));
                 navigate(-1);
