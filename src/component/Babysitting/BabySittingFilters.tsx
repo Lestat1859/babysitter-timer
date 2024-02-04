@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import React, { useMemo, useState} from "react";
 import {lastThreeYears} from "../../utils/dates";
 import {format} from "date-fns";
 import { fr } from 'date-fns/locale';
