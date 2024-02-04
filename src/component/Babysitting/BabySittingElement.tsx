@@ -5,6 +5,8 @@ import {useRecoilState} from "recoil";
 import {babysittingState} from "../../recoil/recoil_states";
 import { useNavigate } from "react-router-dom";
 import Buttons from "../Buttons/Buttons";
+import {logEvent} from "firebase/analytics";
+import {fireBaseAnalytics} from "../../utils/firebase";
 
 
 type DurationProps={
@@ -20,6 +22,7 @@ function BabySittingElement(props:DurationProps){
     function handleDelete(){
         const okToDelete:boolean = window.confirm("Voulez-vous vraiment supprimer cette saisie ?");
         if (okToDelete) {
+            logEvent(fireBaseAnalytics,"babysitting_element_button_delete");
             deleteBabySittingToFireBase(props.id).then(()=>{
                 setBabySittings(babySittings.filter((babySitting) => babySitting.id !== props.id));
             })
@@ -27,6 +30,7 @@ function BabySittingElement(props:DurationProps){
     }
 
     function handleUpdate(){
+        logEvent(fireBaseAnalytics,"babysitting_element_button_update");
         navigate("/babysitting/edit/"+props.id);
     }
 

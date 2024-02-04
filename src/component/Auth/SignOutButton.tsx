@@ -1,12 +1,14 @@
 import React from "react";
-import {firebaseAuth} from "../../utils/firebase";
+import {fireBaseAnalytics, firebaseAuth} from "../../utils/firebase";
 import {signOut } from "firebase/auth";
+import {logEvent} from "firebase/analytics";
 
 function SignOutButton(){
 
     const auth = firebaseAuth;
 
     const handleSignOut = async () => {
+        logEvent(fireBaseAnalytics,"auth_button_signOut");
         try {
             if (auth) {
                 await signOut(auth);

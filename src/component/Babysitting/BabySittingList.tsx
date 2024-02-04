@@ -5,12 +5,15 @@ import { filteredBabySittingState} from '../../recoil/recoil_states';
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Buttons from "../Buttons/Buttons";
+import {logEvent} from "firebase/analytics";
+import {fireBaseAnalytics} from "../../utils/firebase";
 
 function BabySittingList (){
     const babySittings = useRecoilValue(filteredBabySittingState);
     const navigate = useNavigate();
 
     function handleNewBabysitting(){
+        logEvent(fireBaseAnalytics,"babysitting_list_button_add");
         navigate("/babysitting/add");
     }
 
