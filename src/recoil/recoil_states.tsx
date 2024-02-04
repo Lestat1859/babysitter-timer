@@ -1,15 +1,20 @@
 import { atom, selector } from "recoil";
 import {IBabySitting} from "../interfaces/IBabySitting";
 import {IBabysittingFilter} from "../interfaces/IBabysittingFilter";
+import {IPriceTimeInterval} from "../interfaces/IPriceTimeInterval";
 import {Duration} from "date-fns";
 import {formatDurationsInHours, sumDurations} from "../utils/dates";
 import {fetchBabySittingsFromLocalStorage} from "../services/BabySittingService";
+import {getPriceFromPriceIntervalsAndDate, roundTwoDecimals} from "../utils/price";
 
 const defaultBabysittingFilter:IBabysittingFilter = {
     id:'',
     year: new Date().getFullYear(),
     month: new Date().getMonth()+1
 }
+
+const defaultPriceTimeIntervalState:IPriceTimeInterval[]=[];
+
 
 const defaultBabysitting:IBabySitting[]=[];
 
@@ -18,6 +23,12 @@ const babysittingState = atom({
     //default: fetchBabySittingsFromLocalStorage()
     default: defaultBabysitting
 });
+
+const priceTimeIntervalState = atom({
+    key: "priceTimeIntervalState",
+    default:defaultPriceTimeIntervalState
+})
+
 
 const babysittingFilterState = atom({
     key: "babysittingFilterState",
@@ -43,12 +54,17 @@ const filteredBabySittingState = selector({
 const babysittingStatsState = selector({
     key:"babysittingStatsState",
     get:({get})=>{
+        const filteredList:IBabysittingFilter = get(babysittingFilterState)
+        let priceDate = new Date()
+        priceDate.setFullYear(filteredList.year)
+        priceDate.setMonth(filteredList.month-1)
+        const price = getPriceFromPriceIntervalsAndDate(get(priceTimeIntervalState), priceDate.valueOf()) || 0;
         const listBabySittings:IBabySitting[] = get(filteredBabySittingState);
         const totalBabySittings:number = listBabySittings.length;
         const totalBabysittingDurations:Duration = sumDurations(listBabySittings.map( (babySitting) =>
         {return babySitting.duration}));
         const totalBabySittingHours = formatDurationsInHours(totalBabysittingDurations);
-        const totalAmount:number = totalBabySittingHours*9;
+        const totalAmount:number = roundTwoDecimals(totalBabySittingHours * price);
         return {totalBabySittings, totalBabySittingHours, totalAmount};
     }
 })
@@ -56,6 +72,7 @@ const babysittingStatsState = selector({
 
 export {
     babysittingState,
+    priceTimeIntervalState,
     babysittingFilterState,
     filteredBabySittingState,
     babysittingStatsState
