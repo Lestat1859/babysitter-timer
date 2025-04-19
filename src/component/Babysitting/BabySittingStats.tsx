@@ -31,7 +31,7 @@ function BabySittingStats() {
     if (totalBabySittings === 0) return null;
 
     return (
-        <Card sx={{ mb: 4, borderRadius: 3, boxShadow: 2 }}>
+        <Card sx={{ mb: 2, borderRadius: 3, boxShadow: 2 }}>
             <CardContent sx={{ pb: 3 }}>
                 <Typography variant="h5" component="h2" fontWeight="bold" mb={2}>
                     Statistiques

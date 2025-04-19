@@ -7,7 +7,7 @@ import {
   Container, 
   Chip, 
   Avatar, 
-  CircularProgress 
+  CircularProgress
 } from '@mui/material';
 import { AccessTime as AccessTimeIcon, Person as PersonIcon } from '@mui/icons-material';
 
@@ -109,13 +109,15 @@ function View() {
             <AppBar 
                 position="sticky" 
                 sx={{ 
-                    mb: 3,
                     background: 'linear-gradient(90deg, #3b82f6 0%, #4f46e5 100%)',
                     boxShadow: 3,
-                    borderBottom: '1px solid rgba(59, 130, 246, 0.2)'
+                    borderBottom: 'none',
+                    width: '100%',
+                    margin: 0,
+                    padding: 0
                 }}
             >
-                <Toolbar>
+                <Toolbar sx={{ padding: { xs: 0, sm: '0 16px' } }}>
                     <Box display="flex" alignItems="center">
                         <Avatar 
                             sx={{ 
@@ -167,8 +169,14 @@ function View() {
                 </Toolbar>
             </AppBar>
 
-            <Container maxWidth="lg">
-                <BabySittingFilters />
+            <BabySittingFilters />
+            
+            <Container 
+                maxWidth="lg" 
+                sx={{ 
+                    pt: 0
+                }}
+            >
                 <BabySittingList />
                 <BabySittingStats />
                 <FloatingActionButton 

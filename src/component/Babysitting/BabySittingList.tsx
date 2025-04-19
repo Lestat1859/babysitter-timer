@@ -37,36 +37,23 @@ function BabySittingList() {
     };
 
     return (
-        <Card sx={{ mb: 4, borderRadius: 3, boxShadow: 2 }}>
+        <Card sx={{ mb: 2, borderRadius: 3, boxShadow: 2 }}>
             <CardContent sx={{ pb: 3 }}>
                 {/* Header with Add Button */}
-                <Box 
-                    sx={{ 
-                        display: 'flex', 
-                        flexDirection: { xs: 'column', sm: 'row' }, 
-                        justifyContent: 'space-between', 
-                        alignItems: { xs: 'flex-start', sm: 'center' }, 
-                        mb: 3 
-                    }}
-                >
-                    <Box>
-                        <Typography variant="h5" component="h2" fontWeight="bold" mb={0.5}>
-                            Détail des présences
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            Période: <Box component="span" fontWeight="medium">{getCurrentPeriod()}</Box>
-                        </Typography>
-                    </Box>
-
-                    <Box sx={{ mt: { xs: 2, sm: 0 } }}>
-                        <Buttons 
-                            label="Ajouter" 
-                            clickFunction={handleNewBabysitting} 
-                            type="standard" 
-                            iconImage="add"
-                            size="large"
-                        />
-                    </Box>
+                <Box sx={{ mb: 3 }}>
+                    <Typography variant="h5" component="h2" fontWeight="bold" mb={0.5}>
+                        Détail des présences
+                    </Typography>
+                    <Typography 
+                        variant="body2" 
+                        color="text.secondary"
+                        sx={{
+                            fontSize: '0.95rem',
+                            opacity: 0.9
+                        }}
+                    >
+                        Période: <Box component="span" fontWeight="medium">{getCurrentPeriod()}</Box>
+                    </Typography>
                 </Box>
 
                 {/* Babysitting List */}
@@ -98,7 +85,7 @@ function BabySittingList() {
                             py: 6, 
                             px: 2, 
                             textAlign: 'center',
-                            bgcolor: 'grey.50',
+                            bgcolor: 'background.paper',
                             borderRadius: 2
                         }}
                     >
