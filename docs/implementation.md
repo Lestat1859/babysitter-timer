@@ -61,17 +61,37 @@ This component displays a list of babysitting entries with a modern card-based U
 
 ### `BabySittingFilters`
 
-This component provides filtering options for babysitting entries by year and month.
+This component provides filtering options for babysitting entries by year and month with an enhanced user experience.
 
 ```typescript
 // Key functionality:
 // - Allows selecting a year from a dropdown with navigation buttons
 // - Displays month buttons for filtering by specific month
 // - Adapts to mobile screens with responsive design
-// - Collapses months on mobile with expand/collapse functionality
+// - Ensures the selected month is always visible in the scrollable area
+// - Provides smooth scrolling with the selected month centered
+// - Handles cross-year navigation (December to January, January to December)
 // - Updates the filtered babysitting entries in real-time
 // - Tracks user interactions with Firebase Analytics
+// - Supports both light and dark themes with appropriate styling
+// - Optimizes performance with useMemo and debounced scrolling
 ```
+
+The component has been refactored to improve maintainability and user experience:
+
+1. **Enhanced Documentation**: Comprehensive JSDoc comments for better code understanding
+2. **Improved Naming**: More descriptive variable and function names
+3. **Visibility Enhancement**: Ensures the selected month is always visible in the scrollable area
+4. **Responsive Design**: Adapts to different screen sizes with mobile-specific optimizations
+5. **Performance Optimization**: Uses useMemo for expensive calculations and debounced scrolling
+6. **Analytics Integration**: Tracks user interactions for better insights
+
+The component uses the browser's native `scrollIntoView` method with the following options:
+- `behavior: 'smooth'`: Provides smooth scrolling animation
+- `block: 'nearest'`: Only scrolls vertically if needed
+- `inline: 'center'`: Centers the element horizontally when scrolling
+
+A detailed DIVO framework analysis of this component is available in [babysitting-filters.md](./babysitting-filters.md).
 
 ### `BabySittingStats`
 

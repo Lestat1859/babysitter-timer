@@ -1,3 +1,13 @@
+/**
+ * BabySittingFilters Component
+ * 
+ * This component provides a user interface for filtering babysitting entries by year and month.
+ * It features a year dropdown selector and a horizontally scrollable month selector.
+ * The selected filter is always kept visible in the scrollable area.
+ * 
+ * @module BabySittingFilters
+ */
+
 import React, { useMemo, useState, useEffect } from "react";
 import { 
   Box, 
@@ -25,23 +35,31 @@ import { monthList } from "../../utils/months";
 import { logEvent } from "firebase/analytics";
 import { fireBaseAnalytics } from "../../utils/firebase";
 
-function BabySittingFilters() {
+/**
+ * BabySittingFilters Component
+ * 
+ * @returns {JSX.Element} The BabySittingFilters component
+ */
+function BabySittingFilters(): JSX.Element {
+    // Theme and responsive hooks
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     
-    const years = useMemo(() => lastThreeYears(new Date().getFullYear()).sort((a, b) => a - b), []); // Sort years ascending
-    const allMonths: string[] = useMemo(() => monthList, []); // Renamed to allMonths
+    // Data preparation
+    const years = useMemo(() => lastThreeYears(new Date().getFullYear()).sort((a, b) => a - b), []); 
+    const allMonths: string[] = useMemo(() => monthList, []); 
     
     // Get current month name
-    const actualMonthString = useMemo(() => { // Renamed to actualMonthString
+    const currentMonthName = useMemo(() => { 
         return format(new Date(), 'MMMM', { locale: fr })
             .slice(0, 1)
             .toUpperCase()
             .concat(format(new Date(), 'MMMM', { locale: fr }).slice(1));
     }, []);
 
+    // State management
     const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
-    const [selectedMonth, setSelectedMonth] = useState<string>(actualMonthString); // Use renamed variable
+    const [selectedMonth, setSelectedMonth] = useState<string>(currentMonthName);
     const [filter, setFilter] = useRecoilState(babysittingFilterState);
 
     // Get the index of the currently selected month
@@ -49,7 +67,7 @@ function BabySittingFilters() {
         return allMonths.findIndex(month => month === selectedMonth);
     }, [allMonths, selectedMonth]);
 
-    // Always display all months
+    // Prepare month data for display
     const displayedMonths = useMemo(() => {
         return allMonths.map((month, index) => ({ 
             name: month, 
@@ -57,6 +75,10 @@ function BabySittingFilters() {
         }));
     }, [allMonths]);
 
+    /**
+     * Handle year selection change
+     * @param {React.ChangeEvent<{ value: unknown }>} event - The change event
+     */
     function handleSelectYearChange(event: React.ChangeEvent<{ value: unknown }>) {
         logEvent(fireBaseAnalytics, "filter_button_select_year");
         const year = Number(event.target.value);
@@ -67,6 +89,11 @@ function BabySittingFilters() {
         });
     }
 
+    /**
+     * Handle month button click
+     * @param {string} monthString - The month name
+     * @param {number} monthNumber - The month number (1-12)
+     */
     function handleMonthButtonClick(monthString: string, monthNumber: number) {
         logEvent(fireBaseAnalytics, "filter_button_select_month");
         setSelectedMonth(monthString);
@@ -76,7 +103,10 @@ function BabySittingFilters() {
         });
     }
 
-    // Navigate to previous month
+    /**
+     * Navigate to previous month
+     * Handles year change if current month is January
+     */
     function handlePreviousMonth() {
         logEvent(fireBaseAnalytics, "filter_button_previous_month");
         const currentMonthIndex = allMonths.findIndex(month => month === selectedMonth);
@@ -100,7 +130,10 @@ function BabySittingFilters() {
         }
     }
 
-    // Navigate to next month
+    /**
+     * Navigate to next month
+     * Handles year change if current month is December
+     */
     function handleNextMonth() {
         logEvent(fireBaseAnalytics, "filter_button_next_month");
         const currentMonthIndex = allMonths.findIndex(month => month === selectedMonth);
@@ -124,30 +157,50 @@ function BabySittingFilters() {
         }
     }
 
-    // Effect to scroll to selected month when it changes
-    useEffect(() => {
-        if (isMobile) {
-            // Find the selected month button element
-            const selectedButton = document.getElementById(`month-button-${selectedMonthIndex}`);
-            if (selectedButton) {
-                // Get the parent scrollable container
-                const scrollContainer = selectedButton.parentElement;
-                if (scrollContainer) {
-                    // Calculate position to center the selected month
-                    const containerWidth = scrollContainer.offsetWidth;
-                    const buttonLeft = selectedButton.offsetLeft;
-                    const buttonWidth = selectedButton.offsetWidth;
-                    const scrollPosition = buttonLeft - (containerWidth / 2) + (buttonWidth / 2);
-                    
-                    // Smooth scroll to the position
-                    scrollContainer.scrollTo({
-                        left: scrollPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            }
+    /**
+     * Ensures the selected month button is visible in the scrollable area
+     * Uses scrollIntoView to center the button if needed
+     */
+    const ensureSelectedMonthVisible = () => {
+        // Find the selected month button element
+        const selectedButton = document.getElementById(`month-button-${selectedMonthIndex}`);
+        
+        if (selectedButton) {
+            // Use scrollIntoView to ensure the button is visible
+            // The 'block: "nearest"' option will only scroll if the element is not already visible
+            // The 'inline: "center"' option will try to center it horizontally if scrolling is needed
+            selectedButton.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+            });
         }
-    }, [selectedMonth, selectedMonthIndex, isMobile]);
+    };
+
+    // Effect to ensure the selected month is visible when it changes
+    useEffect(() => {
+        // Use a small timeout to ensure DOM is fully rendered
+        const timer = setTimeout(() => {
+            ensureSelectedMonthVisible();
+        }, 50);
+        
+        return () => clearTimeout(timer);
+    }, [selectedMonth, selectedMonthIndex]);
+    
+    // Effect to ensure the selected month is visible on component mount
+    useEffect(() => {
+        ensureSelectedMonthVisible();
+        
+        // Also add a window resize listener to maintain visibility when window size changes
+        const handleResize = () => {
+            ensureSelectedMonthVisible();
+        };
+        
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     return (
         <Box 
@@ -331,6 +384,7 @@ function BabySittingFilters() {
                         
                         {/* Month Selection - Horizontal Scrollable with improved touch scrolling */}
                         <Box 
+                            id="month-buttons-container"
                             sx={{ 
                                 display: 'flex',
                                 alignItems: 'center',

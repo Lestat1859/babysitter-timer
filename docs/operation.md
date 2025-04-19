@@ -46,9 +46,35 @@ This section provides documentation about how to operate and maintain the Babysi
 ### How to Filter Babysitting Sessions
 
 1. Log in to the application
-2. Use the date filters to select a date range
-3. Use the price filters to select a price range
-4. The list will automatically update to show only the sessions that match your filters
+2. Navigate to the main babysitting view
+3. At the top of the screen, you'll see the filter bar with:
+   - A year dropdown selector
+   - A horizontally scrollable list of month buttons
+   - Navigation buttons (on desktop) to move between months
+
+4. To filter by year:
+   - Click on the year dropdown
+   - Select the desired year from the list
+   - The babysitting entries will automatically update to show only entries from the selected year
+
+5. To filter by month:
+   - Click on a month button in the scrollable list
+   - The selected month will be highlighted and centered in the visible area
+   - The babysitting entries will automatically update to show only entries from the selected month and year
+
+6. To navigate through months sequentially:
+   - On desktop: Use the previous/next arrow buttons on either side of the month list
+   - On mobile: Swipe left or right on the month list
+   - When navigating past December, the year will automatically increment
+   - When navigating before January, the year will automatically decrement
+
+7. The filter selection is preserved during your session, allowing you to navigate to other sections of the application and return to the same filtered view
+
+8. The filter bar remains sticky at the top of the screen as you scroll through entries, providing easy access to filtering options at all times
+
+9. The selected filter affects:
+   - The displayed babysitting entries in the list
+   - The statistics shown in the stats section
 
 ### How to View Statistics
 
