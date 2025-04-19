@@ -8,6 +8,10 @@ import AuthContainer from "../Auth/AuthContainer";
 import {firebaseAuth} from "../../utils/firebase";
 import {isUserInAuthWhiteList} from "../../utils/auth";
 import {defaultAuth} from "../../interfaces/IAuth";
+import ErrorPage from "../Error/ErrorPage";
+import {IAuthUser} from "../../interfaces/IAuthUser";
+import {User} from "firebase/auth";
+import AccessDenied from "../Auth/AccessDenied";
 
 
 const privateRouter = createBrowserRouter([
@@ -29,58 +33,88 @@ const privateRouter = createBrowserRouter([
     },
     {
         path: "*",
-        element: <p>Error</p>
+        element: <ErrorPage/>
     },
 ]);
 
 const publicRouter = createBrowserRouter ([
     {
-        path: "*",
+        path: "/",
         element: <AuthContainer/>
+    },
+    {
+        path: "/login",
+        element: <AuthContainer/>
+    },
+    {
+        path: "*",
+        element: <ErrorPage/>
     },
 ]);
 
-function AppRouter(){
+const firebaseUserToIAuthUser = (user: User | null): IAuthUser => {
+    if (user) {
+        return {
+            uid: user.uid,
+            email: user.email,
+        };
+    } else {
+        return defaultAuth;
+    }
+};
 
+function AppRouter() {
     const [currentUser, setCurrentUser] = useState(defaultAuth);
-
+    const [accessDenied, setAccessDenied] = useState(false);
 
     useEffect(() => {
         const auth = firebaseAuth;
 
         if (auth) {
-            auth.onAuthStateChanged((authUser:any) => {
-                if (authUser) {
-                    if (isUserInAuthWhiteList(authUser.email)){
+            auth.onAuthStateChanged((user: User | null) => {
+                if (user) {
+                    // User is signed in
+                    const authUser = firebaseUserToIAuthUser(user);
+                    if (authUser.email && isUserInAuthWhiteList(authUser.email)) {
                         setCurrentUser({
                             id: authUser.uid,
-                            email: authUser.email});
-                            //fetchBabySittingFromFireBase();
-                    }else{
+                            email: authUser.email,
+                            uid: authUser.uid
+                        });
+                        setAccessDenied(false);
+                        //fetchBabySittingFromFireBase();
+                    } else {
                         setCurrentUser(defaultAuth);
-                        alert("Access Denied")
+                        setAccessDenied(true);
+                        // alert("Access Denied");
+                        // TODO: Display error message on the page
                     }
                 } else {
+                    // User is signed out
                     setCurrentUser(defaultAuth);
+                    setAccessDenied(false);
                 }
             });
         }
-
     }, []);
+
+    if (accessDenied) {
+        return <AccessDenied />;
+    }
 
     return (
         <RecoilRoot>
             <React.Suspense fallback={<div>Loading...</div>}>
                 <AuthContext.Provider value={currentUser}>
-                    {(currentUser.email !== "") && (currentUser.email != "null") ? (
+                    {(currentUser.email !== "") && (currentUser.email !== "null") ? (
                         <RouterProvider router={privateRouter} />
-                    ):(
+                    ) : (
                         <RouterProvider router={publicRouter} />
                     )}
                 </AuthContext.Provider>
             </React.Suspense>
         </RecoilRoot>
-    )
+    );
 }
 
 export default AppRouter

@@ -1,67 +1,210 @@
-import {Duration, format} from "date-fns";
-import React from "react";
-import {deleteBabySittingToFireBase} from "../../services/BabySittingService";
-import {useRecoilState} from "recoil";
-import {babysittingState} from "../../recoil/recoil_states";
+import { Duration, format } from "date-fns";
+import React, { useState } from "react";
+import { toast } from 'react-toastify';
+import { deleteBabySittingToFireBase } from "../../services/BabySittingService";
+import { useRecoilState } from "recoil";
+import { babysittingState } from "../../recoil/recoil_states";
 import { useNavigate } from "react-router-dom";
-import Buttons from "../Buttons/Buttons";
-import {logEvent} from "firebase/analytics";
-import {fireBaseAnalytics} from "../../utils/firebase";
+import EditDeleteMenu from "../common/ActionMenu";
+import { logEvent } from "firebase/analytics";
+import { fireBaseAnalytics } from "../../utils/firebase";
+import { 
+  Box, 
+  Typography, 
+  Chip, 
+  Dialog, 
+  DialogTitle, 
+  DialogContent, 
+  DialogContentText, 
+  DialogActions, 
+  Button, 
+  CircularProgress,
+  useTheme,
+  alpha
+} from "@mui/material";
+import { 
+  AccessTime as AccessTimeIcon,
+  Timer as TimerIcon
+} from "@mui/icons-material";
 
-
-type DurationProps={
-    id:string,
-    arrivalDate:Date,
-    departureDate:Date,
-    duration:Duration
+type DurationProps = {
+  id: string,
+  arrivalDate: Date,
+  departureDate: Date,
+  duration: Duration
 }
-function BabySittingElement(props:DurationProps){
-    const [babySittings, setBabySittings] = useRecoilState(babysittingState);
-    const navigate = useNavigate();
 
-    function handleDelete(){
-        const okToDelete:boolean = window.confirm("Voulez-vous vraiment supprimer cette saisie ?");
-        if (okToDelete) {
-            logEvent(fireBaseAnalytics,"babysitting_element_button_delete");
-            deleteBabySittingToFireBase(props.id).then(()=>{
-                setBabySittings(babySittings.filter((babySitting) => babySitting.id !== props.id));
-            })
-        }
+function BabySittingElement(props: DurationProps) {
+  const [babySittings, setBabySittings] = useRecoilState(babysittingState);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
+  const theme = useTheme();
+
+  // Calculate color intensity based on duration
+  const getDurationColor = () => {
+    const hours = props.duration.hours || 0;
+    const minutes = props.duration.minutes || 0;
+    const totalMinutes = hours * 60 + minutes;
+    
+    if (totalMinutes > 300) return {
+      color: theme.palette.success.dark,
+      bgcolor: alpha(theme.palette.success.main, 0.1)
+    }; // > 5 hours
+    
+    if (totalMinutes > 180) return {
+      color: theme.palette.success.main,
+      bgcolor: alpha(theme.palette.success.main, 0.1)
+    }; // > 3 hours
+    
+    return {
+      color: theme.palette.success.light,
+      bgcolor: alpha(theme.palette.success.main, 0.1)
+    };
+  };
+
+  function handleDelete() {
+    setShowDeleteModal(true);
+  }
+
+  async function confirmDelete() {
+    logEvent(fireBaseAnalytics, "babysitting_element_button_delete");
+    setIsDeleting(true);
+    try {
+      await deleteBabySittingToFireBase(props.id);
+      setBabySittings(babySittings.filter((babySitting) => babySitting.id !== props.id));
+      setShowDeleteModal(false);
+      toast.success("Session supprimée avec succès !");
+    } catch (error) {
+      console.error("Error deleting babysitting from element:", error);
+      toast.error("Erreur lors de la suppression de la session.");
+      setShowDeleteModal(false);
+    } finally {
+      setIsDeleting(false);
     }
+  }
 
-    function handleUpdate(){
-        logEvent(fireBaseAnalytics,"babysitting_element_button_update");
-        navigate("/babysitting/edit/"+props.id);
-    }
+  function handleUpdate() {
+    logEvent(fireBaseAnalytics, "babysitting_element_button_update");
+    navigate("/babysitting/edit/" + props.id);
+  }
 
-    return (
-        <section className={"p-2 border flex justify-between bg-white"}>
+  // Format date to display day of week
+  const formatDate = (date: Date) => {
+    const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' };
+    return date.toLocaleDateString('fr-FR', options);
+  };
 
-            <div>
-                <p className={"mb-0.5 font-semibold "}> Le {props.arrivalDate.toLocaleDateString()}</p>
-                <div className={"flex text-green-800"}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className={"ml-1 font-medium"}>{props.duration.hours}h{props.duration.minutes}min</p>
-                </div>
-            </div>
+  const durationColors = getDurationColor();
 
-            <div>
-                <p className={"mb-0.5 text-gray-700 "}>{format(props.arrivalDate,'HH:mm')}</p>
-                <p className={"text-gray-700"}>{format(props.departureDate,'HH:mm')}</p>
-            </div>
+  return (
+    <>
+      <Box 
+        sx={{ 
+          py: 2, 
+          px: 3,
+          transition: 'all 0.2s',
+          bgcolor: isHovered ? 'primary.lighter' : 'transparent',
+          '&:hover': {
+            bgcolor: 'primary.lighter'
+          }
+        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        aria-label={`Session de babysitting du ${formatDate(props.arrivalDate)}`}
+      >
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          {/* Left side: Date, Time, and Duration */}
+          <Box flexGrow={1}>
+            <Box display="flex" flexWrap="wrap" alignItems="center" mb={0.5}>
+              {/* Date */}
+              <Typography variant="subtitle1" fontWeight="medium" color="text.primary" mr={1}>
+                Le {formatDate(props.arrivalDate)}
+              </Typography>
+              
+              {/* Time display */}
+              <Chip
+                icon={<AccessTimeIcon fontSize="small" color="primary" />}
+                label={`${format(props.arrivalDate, 'HH:mm')} - ${format(props.departureDate, 'HH:mm')}`}
+                size="small"
+                sx={(theme) => ({ 
+                  bgcolor: theme.palette.mode === 'dark' ? alpha(theme.palette.primary.main, 0.1) : 'grey.100',
+                  color: theme.palette.mode === 'dark' ? theme.palette.primary.light : 'text.secondary',
+                  fontWeight: 'medium',
+                  height: 24,
+                  border: theme.palette.mode === 'dark' ? `1px solid ${alpha(theme.palette.primary.main, 0.2)}` : 'none'
+                })}
+              />
+            </Box>
+            
+            {/* Duration */}
+            <Box mt={0.5}>
+              <Chip
+                icon={<TimerIcon fontSize="small" color="success" />}
+                label={`${props.duration.hours || 0}h${props.duration.minutes || 0}min`}
+                size="small"
+                sx={(theme) => ({ 
+                  bgcolor: theme.palette.mode === 'dark' 
+                    ? alpha(theme.palette.success.main, 0.15)
+                    : durationColors.bgcolor,
+                  color: theme.palette.mode === 'dark'
+                    ? theme.palette.success.light
+                    : durationColors.color,
+                  fontWeight: 'medium',
+                  height: 24,
+                  border: theme.palette.mode === 'dark' 
+                    ? `1px solid ${alpha(theme.palette.success.main, 0.3)}` 
+                    : 'none'
+                })}
+              />
+            </Box>
+          </Box>
 
-            <div className={"flex"}>
-                <Buttons label={""} clickFunction={handleUpdate} type={"transparentBgStyle"} iconImage={"detail"} hiddenMd={true}></Buttons>
+          {/* Action Menu */}
+          <EditDeleteMenu 
+            onEdit={handleUpdate}
+            onDelete={handleDelete}
+          />
+        </Box>
+      </Box>
 
-                <div className={"hidden md:block md:flex"}>
-                    <Buttons label={""} clickFunction={handleUpdate} type={"standard"} iconImage={"edit"} ></Buttons>
-                    <Buttons label={""} clickFunction={handleDelete} type={"cancel"} iconImage={"delete"} ></Buttons>
-                </div>
-            </div>
-        </section>
-    )
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={showDeleteModal}
+        onClose={() => !isDeleting && setShowDeleteModal(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Confirmer la suppression
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Voulez-vous vraiment supprimer cette session de babysitting du {formatDate(props.arrivalDate)} ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button 
+            onClick={() => setShowDeleteModal(false)} 
+            color="inherit"
+            disabled={isDeleting}
+          >
+            Annuler
+          </Button>
+          <Button 
+            onClick={confirmDelete} 
+            color="error" 
+            variant="contained"
+            disabled={isDeleting}
+            startIcon={isDeleting ? <CircularProgress size={20} color="inherit" /> : null}
+          >
+            Supprimer
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
 }
 
 export default BabySittingElement;

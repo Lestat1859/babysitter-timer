@@ -4,7 +4,7 @@ import {IBabysittingFilter} from "../interfaces/IBabysittingFilter";
 import {IPriceTimeInterval} from "../interfaces/IPriceTimeInterval";
 import {Duration} from "date-fns";
 import {formatDurationsInHours, sumDurations} from "../utils/dates";
-import {fetchBabySittingsFromLocalStorage} from "../services/BabySittingService";
+// Import removed to address unused import warning
 import {getPriceFromPriceIntervalsAndDate, roundTwoDecimals} from "../utils/price";
 
 const defaultBabysittingFilter:IBabysittingFilter = {
@@ -42,9 +42,9 @@ const filteredBabySittingState = selector({
 
         const filteredList:IBabysittingFilter = get(babysittingFilterState)
         if (filteredList.year !== 0){
-            listBabySittings = listBabySittings.filter((babysitting)=>babysitting.arrivalDate.getFullYear()==filteredList.year);
+            listBabySittings = listBabySittings.filter((babysitting)=>babysitting.arrivalDate.getFullYear()===filteredList.year);
             if (filteredList.month !== 0){
-                listBabySittings = listBabySittings.filter((babysitting)=>babysitting.arrivalDate.getMonth()+1==filteredList.month)
+                listBabySittings = listBabySittings.filter((babysitting)=>babysitting.arrivalDate.getMonth()+1===filteredList.month)
             }
         }
         return listBabySittings.sort((babySittingA:any, babySittingB:any)=>babySittingB.arrivalDate-babySittingA.arrivalDate)

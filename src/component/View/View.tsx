@@ -1,32 +1,46 @@
-import React, {useContext, useEffect} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { 
+  AppBar, 
+  Toolbar, 
+  Typography, 
+  Box, 
+  Container, 
+  Chip, 
+  Avatar, 
+  CircularProgress 
+} from '@mui/material';
+import { AccessTime as AccessTimeIcon, Person as PersonIcon } from '@mui/icons-material';
 
 import BabySittingList from "../Babysitting/BabySittingList";
 import BabySittingFilters from "../Babysitting/BabySittingFilters";
 import BabySittingStats from "../Babysitting/BabySittingStats";
 import SignOutButton from "../Auth/SignOutButton";
+import ThemeToggle from "../common/ThemeToggle";
+import FloatingActionButton from "../common/FloatingActionButton";
 import AuthContext from "../../context/auth-context";
-import {useRecoilState} from "recoil";
-import {babysittingState, priceTimeIntervalState} from "../../recoil/recoil_states";
-import {child, ref,onValue} from "firebase/database";
-import {IBabySitting} from "../../interfaces/IBabySitting";
-import {firebaseDatabase,fireBaseAnalytics} from "../../utils/firebase";
-import {IPriceTimeInterval} from "../../interfaces/IPriceTimeInterval";
-import {logEvent} from "firebase/analytics";
+import { useRecoilState } from "recoil";
+import { babysittingState, priceTimeIntervalState } from "../../recoil/recoil_states";
+import { child, ref, onValue } from "firebase/database";
+import { IBabySitting } from "../../interfaces/IBabySitting";
+import { firebaseDatabase, fireBaseAnalytics } from "../../utils/firebase";
+import { IPriceTimeInterval } from "../../interfaces/IPriceTimeInterval";
+import { logEvent } from "firebase/analytics";
 
-function View(){
+function View() {
+    const [isLoading, setIsLoading] = useState(true);
+    const currentUser = useContext(AuthContext);
+    // These state variables are used indirectly through recoil selectors
+    const [, setBabysittings] = useRecoilState(babysittingState);
+    const [, setPriceTimerIntervals] = useRecoilState(priceTimeIntervalState);
 
-    const currentUser=useContext(AuthContext);
-    const [babysittings, setBabysittings] = useRecoilState(babysittingState);
-    const [priceTimerIntervals, setPriceTimerIntervals] = useRecoilState(priceTimeIntervalState)
-
-    function fetchPriceTimerintervalFromFirebase(){
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    function fetchPriceTimerintervalFromFirebase() {
         const dbRef = ref(firebaseDatabase);
         const path = "PriceTimeInterval/";
         onValue(child(dbRef, path), (snapshot) => {
             if (snapshot.exists()) {
                 const priceTimerintervalFetched: any = [];
                 snapshot.forEach((priceTimerintervalInFirebase) => {
-                    //console.table(priceTimerintervalInFirebase.val());
                     const priceTimerinterval: IPriceTimeInterval = {
                         begin: new Date(priceTimerintervalInFirebase.val().begin),
                         end: new Date(priceTimerintervalInFirebase.val().end),
@@ -38,6 +52,8 @@ function View(){
             }
         });
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     function fetchBabySittingFromFireBase() {
         const dbRef = ref(firebaseDatabase);
         const path = "Iloukia/";
@@ -56,49 +72,113 @@ function View(){
                 setBabysittings(babysittingsFetched);
             }
         });
-
     }
+
     useEffect(() => {
-            fetchBabySittingFromFireBase();
-            fetchPriceTimerintervalFromFirebase();
-            logEvent(fireBaseAnalytics, 'view_home');
+        Promise.all([
+            fetchBabySittingFromFireBase(),
+            fetchPriceTimerintervalFromFirebase()
+        ]).finally(() => {
+            setIsLoading(false);
+        });
+        logEvent(fireBaseAnalytics, 'view_home');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // Render loading indicator or main content
+    if (isLoading) {
+        return (
+            <Box 
+                display="flex" 
+                justifyContent="center" 
+                alignItems="center" 
+                minHeight="100vh"
+            >
+                <Box textAlign="center">
+                    <CircularProgress color="primary" size={40} sx={{ mb: 2 }} />
+                    <Typography variant="h6" color="text.secondary">
+                        Chargement des données...
+                    </Typography>
+                </Box>
+            </Box>
+        );
+    }
 
-/*
-    useEffect(() => {
-        console.log("Chargement View");
-        console.table(babysittings);
-    }, [babysittings]);
-
-
-    useEffect(() => {
-        console.log("Chargement View");
-        console.table(priceTimerIntervals);
-    }, [priceTimerIntervals]);
-*/
-
-    return(
+    return (
         <>
-            <div className={"mb-5 pt-4 pb-4 px-8 max-w-full bg-blue-500 border-solid shadow-lg flex justify-between" } >
-                <p className={"font-medium text-md text-gray-50 md:text-xl"}> Suivi des présences périscolaires</p>
-                <div className={"flex items-center"}>
+            <AppBar 
+                position="sticky" 
+                sx={{ 
+                    mb: 3,
+                    background: 'linear-gradient(90deg, #3b82f6 0%, #4f46e5 100%)',
+                    boxShadow: 3,
+                    borderBottom: '1px solid rgba(59, 130, 246, 0.2)'
+                }}
+            >
+                <Toolbar>
+                    <Box display="flex" alignItems="center">
+                        <Avatar 
+                            sx={{ 
+                                mr: 2, 
+                                bgcolor: 'rgba(255, 255, 255, 0.1)',
+                                width: 40,
+                                height: 40
+                            }}
+                        >
+                            <AccessTimeIcon />
+                        </Avatar>
+                        <Typography 
+                            variant="h6" 
+                            component="h1" 
+                            sx={{ 
+                                fontWeight: 600,
+                                fontSize: { xs: '1rem', md: '1.25rem' }
+                            }}
+                        >
+                            Suivi des présences périscolaires
+                        </Typography>
+                    </Box>
+                    
+                    <Box sx={{ flexGrow: 1 }} />
+                    
+                    {currentUser.email !== "" && (
+                        <Box display="flex" alignItems="center">
+                            <Chip
+                                icon={<PersonIcon color="primary" />}
+                                label={currentUser.email}
+                                sx={{
+                                    mr: 2,
+                                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                                    color: 'white',
+                                    display: { xs: 'none', md: 'flex' },
+                                    '& .MuiChip-label': {
+                                        maxWidth: 150,
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis'
+                                    }
+                                }}
+                            />
+                            <Box display="flex" alignItems="center" gap={1}>
+                                <ThemeToggle />
+                                <SignOutButton />
+                            </Box>
+                        </Box>
+                    )}
+                </Toolbar>
+            </AppBar>
 
-                    <p className={"mr-3 text-gray-50 hidden md:block"}>Bienvenue {currentUser.email} </p>
-                    {
-                        currentUser.email !== "" ?
-                            (<SignOutButton />) : (<></>)
-                    }
-                </div>
-            </div>
-
-
-            <BabySittingFilters />
-            <BabySittingList />
-            <BabySittingStats />
+            <Container maxWidth="lg">
+                <BabySittingFilters />
+                <BabySittingList />
+                <BabySittingStats />
+                <FloatingActionButton 
+                    tooltip="Ajouter une présence"
+                    to="/babysitting/add"
+                    showOnDesktop={true} 
+                />
+            </Container>
         </>
-    )
+    );
 }
 
 export default View;
-

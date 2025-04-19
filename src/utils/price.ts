@@ -1,10 +1,8 @@
 import {IPriceTimeInterval} from "../interfaces/IPriceTimeInterval";
-function getPriceFromPriceIntervalsAndDate(priceIntervals:any, date:number) {
-    //const epochDate = Math.floor(date.getTime() / 1000); // Convert the input date to epoch format
 
+function getPriceFromPriceIntervalsAndDate(priceIntervals:IPriceTimeInterval[], date:number) {
     // Find the corresponding value for the input date
-    // @ts-ignore
-    const matchingInterval = priceIntervals.find(interval => date >= interval.begin.valueOf() && date <= interval.end.valueOf());
+    const matchingInterval = priceIntervals.find((interval: IPriceTimeInterval) => date >= interval.begin.valueOf() && date <= interval.end.valueOf());
 
     if (matchingInterval) {
         return matchingInterval.price;

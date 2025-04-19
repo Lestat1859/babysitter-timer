@@ -8,7 +8,8 @@ import {
     monthNumberToMonthString,
     formatDurationsInHours
 } from './dates'
-import {IBabySitting} from "../interfaces/IBabySitting";
+import { Duration } from 'date-fns';
+import { IBabySitting } from "../interfaces/IBabySitting";
 
 const mockedStartDate:Date = new Date('1970-01-01T00:00:00.000');
 const mockedEndDate:Date = new Date('1970-01-01T02:00:00.000');
@@ -74,7 +75,3 @@ it( 'Should return the last three years',()=>{
 it( 'Should return the number oh hour of a duration',()=>{
     expect (formatDurationsInHours(mockedDuration)).toEqual(9650);
 })
-
-
-
-
