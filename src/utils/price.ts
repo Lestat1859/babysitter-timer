@@ -1,11 +1,26 @@
 import {IPriceTimeInterval} from "../interfaces/IPriceTimeInterval";
 
-function getPriceFromPriceIntervalsAndDate(priceIntervals:IPriceTimeInterval[], date:number) {
-    // Find the corresponding value for the input date
-    const matchingInterval = priceIntervals.find((interval: IPriceTimeInterval) => date >= interval.begin.valueOf() && date <= interval.end.valueOf());
+function getPriceFromPriceIntervalsAndDate(priceIntervals:IPriceTimeInterval[], date:number, userId?: string) {
+    // Find all intervals matching the date
+    const validIntervals = priceIntervals.filter((interval: IPriceTimeInterval) => {
+        const isAfterStart = date >= interval.begin.valueOf();
+        const isBeforeEnd = !interval.end || date <= interval.end.valueOf();
+        return isAfterStart && isBeforeEnd;
+    });
 
-    if (matchingInterval) {
-        return matchingInterval.price;
+    // 1. Try to find a user-specific interval
+    if (userId) {
+        const userInterval = validIntervals.find(interval => interval.userId === userId);
+        if (userInterval) {
+            return userInterval.price;
+        }
+    }
+
+    // 2. Fallback: Find a default interval (no userId)
+    const defaultInterval = validIntervals.find(interval => !interval.userId);
+
+    if (defaultInterval) {
+        return defaultInterval.price;
     } else {
         return null; // Return null if no matching interval is found
     }

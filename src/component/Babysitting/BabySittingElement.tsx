@@ -22,16 +22,20 @@ import {
   useTheme,
   alpha
 } from "@mui/material";
-import { 
+import {
   AccessTime as AccessTimeIcon,
-  Timer as TimerIcon
+  Timer as TimerIcon,
+  Person as PersonIcon
 } from "@mui/icons-material";
+import { useUserRole } from "../../hooks/useUserRole";
 
 type DurationProps = {
   id: string,
   arrivalDate: Date,
   departureDate: Date,
-  duration: Duration
+  duration: Duration,
+  userId?: string,      // Optionnel pour compatibilité
+  userEmail?: string    // Optionnel pour affichage
 }
 
 function BabySittingElement(props: DurationProps) {
@@ -41,6 +45,7 @@ function BabySittingElement(props: DurationProps) {
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
   const theme = useTheme();
+  const { canViewAllUsersSessions } = useUserRole();
 
   // Calculate color intensity based on duration
   const getDurationColor = () => {
@@ -70,14 +75,21 @@ function BabySittingElement(props: DurationProps) {
 
   async function confirmDelete() {
     logEvent(fireBaseAnalytics, "babysitting_element_button_delete");
+    console.log('🔍 [DEBUG] confirmDelete dans BabySittingElement.tsx:', {
+      idToDelete: props.id,
+      currentBabysittings: babySittings.length,
+      message: 'Début de la suppression depuis l\'élément'
+    });
     setIsDeleting(true);
     try {
-      await deleteBabySittingToFireBase(props.id);
+      await deleteBabySittingToFireBase(props.id, true);
+      console.log('✅ [DEBUG] Suppression Firebase réussie depuis l\'élément');
       setBabySittings(babySittings.filter((babySitting) => babySitting.id !== props.id));
+      console.log('✅ [DEBUG] State local mis à jour depuis l\'élément');
       setShowDeleteModal(false);
       toast.success("Session supprimée avec succès !");
     } catch (error) {
-      console.error("Error deleting babysitting from element:", error);
+      console.error("❌ [DEBUG] Erreur lors de la suppression depuis l'élément:", error);
       toast.error("Erreur lors de la suppression de la session.");
       setShowDeleteModal(false);
     } finally {
@@ -144,8 +156,8 @@ function BabySittingElement(props: DurationProps) {
                 icon={<TimerIcon fontSize="small" color="success" />}
                 label={`${props.duration.hours || 0}h${props.duration.minutes || 0}min`}
                 size="small"
-                sx={(theme) => ({ 
-                  bgcolor: theme.palette.mode === 'dark' 
+                sx={(theme) => ({
+                  bgcolor: theme.palette.mode === 'dark'
                     ? alpha(theme.palette.success.main, 0.15)
                     : durationColors.bgcolor,
                   color: theme.palette.mode === 'dark'
@@ -153,12 +165,48 @@ function BabySittingElement(props: DurationProps) {
                     : durationColors.color,
                   fontWeight: 'medium',
                   height: 24,
-                  border: theme.palette.mode === 'dark' 
-                    ? `1px solid ${alpha(theme.palette.success.main, 0.3)}` 
+                  border: theme.palette.mode === 'dark'
+                    ? `1px solid ${alpha(theme.palette.success.main, 0.3)}`
                     : 'none'
                 })}
               />
             </Box>
+
+            {/* User info for admins */}
+            {canViewAllUsersSessions() && (
+              <Box mt={0.5}>
+                <Chip
+                  icon={<PersonIcon fontSize="small" />}
+                  label={props.userEmail || 'Iloukia'}
+                  size="small"
+                  sx={(theme) => ({
+                    bgcolor: (props.userEmail === 'Iloukia' || !props.userEmail)
+                      ? theme.palette.mode === 'dark'
+                        ? alpha(theme.palette.warning.main, 0.15)
+                        : alpha(theme.palette.warning.main, 0.1)
+                      : theme.palette.mode === 'dark'
+                        ? alpha(theme.palette.info.main, 0.15)
+                        : alpha(theme.palette.info.main, 0.1),
+                    color: (props.userEmail === 'Iloukia' || !props.userEmail)
+                      ? theme.palette.mode === 'dark'
+                        ? theme.palette.warning.light
+                        : theme.palette.warning.main
+                      : theme.palette.mode === 'dark'
+                        ? theme.palette.info.light
+                        : theme.palette.info.main,
+                    fontWeight: 'medium',
+                    height: 24,
+                    border: (props.userEmail === 'Iloukia' || !props.userEmail)
+                      ? theme.palette.mode === 'dark'
+                        ? `1px solid ${alpha(theme.palette.warning.main, 0.3)}`
+                        : 'none'
+                      : theme.palette.mode === 'dark'
+                        ? `1px solid ${alpha(theme.palette.info.main, 0.3)}`
+                        : 'none'
+                  })}
+                />
+              </Box>
+            )}
           </Box>
 
           {/* Action Menu */}

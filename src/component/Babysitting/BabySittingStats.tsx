@@ -9,17 +9,23 @@ import {
   Paper, 
   Avatar
 } from "@mui/material";
-import { 
+import {
   CalendarMonth as CalendarIcon,
   AccessTime as AccessTimeIcon,
   ShowChart as ShowChartIcon,
   PaidOutlined as PaidIcon
 } from "@mui/icons-material";
+import { useUserRole } from "../../hooks/useUserRole";
 
 function BabySittingStats() {
     const { totalBabySittings, totalBabySittingHours, totalAmount } = useRecoilValue(babysittingStatsState);
+    const { isAdmin } = useUserRole();
     const averageHours = totalBabySittings > 0 ? parseFloat((totalBabySittingHours / totalBabySittings).toFixed(2)) : 0;
     
+    // Adjust column width based on role
+    // If admin, 4 columns (25%). If not, 3 columns (33.33%)
+    const mdWidth = isAdmin ? 'calc(25% - 12px)' : 'calc(33.33% - 11px)';
+
     // Format hours and minutes for display
     const formatHoursMinutes = (hours: number) => {
         const wholeHours = Math.floor(hours);
@@ -50,10 +56,10 @@ function BabySittingStats() {
                 >
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
                         {/* Number of sessions */}
-                        <Box sx={{ width: { xs: '100%', sm: 'calc(50% - 8px)', md: 'calc(25% - 12px)' } }}>
-                            <Box 
-                                sx={{ 
-                                    display: 'flex', 
+                        <Box sx={{ width: { xs: '100%', sm: 'calc(50% - 8px)', md: mdWidth }, flexGrow: 1 }}>
+                            <Box
+                                sx={{
+                                    display: 'flex',
                                     alignItems: 'center', 
                                     p: 2, 
                                     bgcolor: 'background.paper', 
@@ -84,10 +90,10 @@ function BabySittingStats() {
                         </Box>
                         
                         {/* Total duration */}
-                        <Box sx={{ width: { xs: '100%', sm: 'calc(50% - 8px)', md: 'calc(25% - 12px)' } }}>
-                            <Box 
-                                sx={{ 
-                                    display: 'flex', 
+                        <Box sx={{ width: { xs: '100%', sm: 'calc(50% - 8px)', md: mdWidth }, flexGrow: 1 }}>
+                            <Box
+                                sx={{
+                                    display: 'flex',
                                     alignItems: 'center', 
                                     p: 2, 
                                     bgcolor: 'background.paper', 
@@ -117,45 +123,47 @@ function BabySittingStats() {
                             </Box>
                         </Box>
                         
-                        {/* Total amount */}
-                        <Box sx={{ width: { xs: '100%', sm: 'calc(50% - 8px)', md: 'calc(25% - 12px)' } }}>
-                            <Box 
-                                sx={{ 
-                                    display: 'flex', 
-                                    alignItems: 'center', 
-                                    p: 2, 
-                                    bgcolor: 'background.paper', 
-                                    borderRadius: 2,
-                                    boxShadow: 1,
-                                    border: '1px solid',
-                                    borderColor: 'primary.light',
-                                    height: '100%'
-                                }}
-                            >
-                                <Avatar 
-                                    color="primary"
-                                    sx={{ 
-                                        mr: 2
+                        {/* Total amount - Only visible to admins */}
+                        {isAdmin && (
+                            <Box sx={{ width: { xs: '100%', sm: 'calc(50% - 8px)', md: mdWidth }, flexGrow: 1 }}>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        p: 2,
+                                        bgcolor: 'background.paper',
+                                        borderRadius: 2,
+                                        boxShadow: 1,
+                                        border: '1px solid',
+                                        borderColor: 'primary.light',
+                                        height: '100%'
                                     }}
                                 >
-                                    <PaidIcon />
-                                </Avatar>
-                                <Box>
-                                    <Typography variant="body2" color="text.secondary" fontWeight="medium">
-                                        À déclarer
-                                    </Typography>
-                                    <Typography variant="h6" fontWeight="bold">
-                                        {totalAmount} €
-                                    </Typography>
+                                    <Avatar
+                                        color="primary"
+                                        sx={{
+                                            mr: 2
+                                        }}
+                                    >
+                                        <PaidIcon />
+                                    </Avatar>
+                                    <Box>
+                                        <Typography variant="body2" color="text.secondary" fontWeight="medium">
+                                            À déclarer
+                                        </Typography>
+                                        <Typography variant="h6" fontWeight="bold">
+                                            {totalAmount} €
+                                        </Typography>
+                                    </Box>
                                 </Box>
                             </Box>
-                        </Box>
+                        )}
                         
                         {/* Average duration */}
-                        <Box sx={{ width: { xs: '100%', sm: 'calc(50% - 8px)', md: 'calc(25% - 12px)' } }}>
-                            <Box 
-                                sx={{ 
-                                    display: 'flex', 
+                        <Box sx={{ width: { xs: '100%', sm: 'calc(50% - 8px)', md: mdWidth }, flexGrow: 1 }}>
+                            <Box
+                                sx={{
+                                    display: 'flex',
                                     alignItems: 'center', 
                                     p: 2, 
                                     bgcolor: 'background.paper', 

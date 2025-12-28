@@ -4,8 +4,10 @@ import { fireBaseAnalytics, firebaseAuth } from "../../utils/firebase";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { logEvent } from "firebase/analytics";
 import { toast } from 'react-toastify';
-import { 
-    Box, 
+import { parseCustomClaims } from "../../utils/auth";
+import { createAuthorizedUser } from "../../services/AuthorizedUsersService";
+import {
+    Box,
     Card, 
     CardContent, 
     Typography, 
@@ -84,9 +86,17 @@ function AuthContainer() {
         
         try {
             if (auth) {
-                const user = await signInWithEmailAndPassword(auth, email.value, password.value);
-                console.log("user", user.user.email);
-                toast.success(`Bienvenue ${user.user.email}!`);
+                const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
+                const user = userCredential.user;
+                
+                // Récupérer les custom claims pour déterminer le rôle
+                const idTokenResult = await user.getIdTokenResult();
+                const { role, isAdmin } = parseCustomClaims(idTokenResult);
+                
+                console.log(`Utilisateur connecté: ${user.email}, Rôle: ${role}, Admin: ${isAdmin}`);
+                
+                const adminBadge = isAdmin ? ' 🛡️ (Admin)' : '';
+                toast.success(`Bienvenue ${user.email}!${adminBadge}`);
             }
         } catch (error: any) {
             handleAuthError(error);
@@ -105,9 +115,26 @@ function AuthContainer() {
         
         try {
             if (auth) {
-                const user = await createUserWithEmailAndPassword(auth, email.value, password.value);
-                console.log("user", user.user.email);
-                toast.success(`Compte créé avec succès! Bienvenue ${user.user.email}!`);
+                const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value);
+                const user = userCredential.user;
+                
+                // Pour un nouveau compte, pas de custom claims par défaut (role: 'user')
+                console.log(`Nouveau compte créé: ${user.email}, Rôle: user (par défaut)`);
+
+                // Créer le document utilisateur dans Firestore (inactif par défaut)
+                try {
+                    await createAuthorizedUser({
+                        uid: user.uid,
+                        email: user.email || "",
+                        role: 'user',
+                        isActive: false,
+                        createdBy: user.uid
+                    });
+                    toast.success(`Compte créé avec succès! Votre compte est en attente de validation par un administrateur.`);
+                } catch (firestoreError) {
+                    console.error("Erreur lors de la création du profil utilisateur:", firestoreError);
+                    toast.warning("Compte créé, mais erreur lors de la création du profil. Contactez un administrateur.");
+                }
             }
         } catch (error: any) {
             handleAuthError(error);

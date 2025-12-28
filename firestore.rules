@@ -1,0 +1,63 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function pour vérifier si un utilisateur est admin
+    function isAdmin() {
+      return request.auth != null &&
+             exists(/databases/$(database)/documents/authorizedUsers/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/authorizedUsers/$(request.auth.uid)).data.role == 'admin' &&
+             get(/databases/$(database)/documents/authorizedUsers/$(request.auth.uid)).data.isActive == true;
+    }
+    
+    // Helper function pour vérifier si un utilisateur est autorisé et actif
+    function isAuthorizedUser() {
+      return request.auth != null &&
+             exists(/databases/$(database)/documents/authorizedUsers/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/authorizedUsers/$(request.auth.uid)).data.isActive == true;
+    }
+    
+    // Helper function pour vérifier si la collection est vide (première migration)
+    function isFirstUser() {
+      return request.auth != null &&
+             !exists(/databases/$(database)/documents/authorizedUsers/$(request.auth.uid));
+    }
+    
+    // Collection des utilisateurs autorisés
+    match /authorizedUsers/{userId} {
+      // Lecture : utilisateur connecté peut lire son propre document
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // Lecture globale : seulement les admins
+      allow list: if isAdmin();
+      
+      // Création : admins
+      allow create: if isAdmin();
+
+      // Création : premier utilisateur pour la migration initiale
+      allow create: if isFirstUser() &&
+                       request.auth.uid == userId &&
+                       request.resource.data.role == 'admin' &&
+                       request.resource.data.isActive == true;
+
+      // Création : auto-inscription (inactif par défaut)
+      allow create: if request.auth.uid == userId &&
+                       request.resource.data.isActive == false &&
+                       request.resource.data.role == 'user';
+      
+      // Mise à jour et suppression : seulement les admins
+      allow update, delete: if isAdmin();
+    }
+    
+    // Ajoutez ici d'autres règles pour vos autres collections
+    // Par exemple, pour la collection babysittings
+    match /babysittings/{babysittingId} {
+      // Les utilisateurs autorisés et actifs peuvent lire et écrire leurs propres documents
+      allow read, write: if isAuthorizedUser() && 
+                            request.auth.uid == resource.data.userId;
+      
+      // Les admins peuvent tout faire
+      allow read, write: if isAdmin();
+    }
+  }
+}

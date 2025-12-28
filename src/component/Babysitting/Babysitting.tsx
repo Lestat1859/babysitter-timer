@@ -9,7 +9,7 @@ import {
     updateBabySittingToFireBase,
     deleteBabySittingToFireBase
 } from "../../services/BabySittingService";
-import {babysittingState} from '../../recoil/recoil_states'
+import {babysittingState, authState} from '../../recoil/recoil_states'
 import { v4 as uuidv4 } from 'uuid';
 import { IBabySitting } from "../../interfaces/IBabySitting";
 import { fireBaseAnalytics } from "../../utils/firebase";
@@ -58,6 +58,7 @@ function Babysitting() {
     const [isDeleting, setIsDeleting] = useState(false);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [babySittings, setBabySittings] = useRecoilState(babysittingState);
+    const [auth] = useRecoilState(authState);
     const navigate = useNavigate();
     const { idBabysitting } = useParams() || "";
     const theme = useTheme();
@@ -99,14 +100,21 @@ function Babysitting() {
     async function confirmDelete() {
         const idBabySittingToDelete = idBabysitting || "";
         logEvent(fireBaseAnalytics,"babysitting_button_delete");
+        console.log('🔍 [DEBUG] confirmDelete dans Babysitting.tsx:', {
+            idBabySittingToDelete,
+            currentBabysittings: babySittings.length,
+            message: 'Début de la suppression'
+        });
         setIsDeleting(true);
         try {
-            await deleteBabySittingToFireBase(idBabySittingToDelete);
+            await deleteBabySittingToFireBase(idBabySittingToDelete, true);
+            console.log('✅ [DEBUG] Suppression Firebase réussie');
             setBabySittings(babySittings.filter((babySitting) => babySitting.id !== idBabySittingToDelete));
+            console.log('✅ [DEBUG] State local mis à jour');
             toast.success("Session supprimée avec succès !");
             navigate(-1);
         } catch (error) {
-            console.error("Error deleting babysitting:", error);
+            console.error("❌ [DEBUG] Erreur lors de la suppression:", error);
             toast.error("Erreur lors de la suppression de la session.");
             setShowDeleteConfirm(false);
         } finally {
@@ -115,14 +123,16 @@ function Babysitting() {
     }
     
     async function addBabysitting(){
-        const babySitting = {
+        const babySitting: IBabySitting = {
             id: uuidv4(),
             arrivalDate: arrivalDate,
             departureDate: departureDate,
-            duration: duration
+            duration: duration,
+            userId: auth.uid,
+            userEmail: auth.email
         }
         try {
-            await addBabySittingToFireBase(babySitting);
+            await addBabySittingToFireBase(babySitting, auth);
             setBabySittings([...babySittings, babySitting]);
             toast.success("Session ajoutée avec succès !");
             navigate(-1);
@@ -135,11 +145,15 @@ function Babysitting() {
     }
     
     async function updateBabysitting(){
+        const existingBabysitting = babySittings.find((babysitting) => babysitting.id === idBabysitting);
         const babySitting: IBabySitting = {
             id: idBabysitting || "",
             arrivalDate: arrivalDate,
             departureDate: departureDate,
-            duration: duration
+            duration: duration,
+            // Garder les informations utilisateur existantes ou utiliser les valeurs par défaut
+            userId: existingBabysitting?.userId || auth.uid,
+            userEmail: existingBabysitting?.userEmail || auth.email
         }
         let babySitingsUpdated: IBabySitting[] = babySittings.slice();
         const babysittingPosition: number = babySitingsUpdated.findIndex(
@@ -148,7 +162,7 @@ function Babysitting() {
         babySitingsUpdated[babysittingPosition] = babySitting;
 
         try {
-            await updateBabySittingToFireBase(babySitting);
+            await updateBabySittingToFireBase(babySitting, auth);
             setBabySittings(babySitingsUpdated);
             toast.success("Session mise à jour avec succès !");
             navigate(-1);

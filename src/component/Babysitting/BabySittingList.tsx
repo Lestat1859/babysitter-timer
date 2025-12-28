@@ -73,6 +73,8 @@ function BabySittingList() {
                                         arrivalDate={durationItem.arrivalDate}
                                         departureDate={durationItem.departureDate}
                                         duration={durationItem.duration}
+                                        userId={durationItem.userId}
+                                        userEmail={durationItem.userEmail}
                                     />
                                 </Box>
                             ))}

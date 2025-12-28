@@ -2,6 +2,7 @@ import { atom, selector } from "recoil";
 import {IBabySitting} from "../interfaces/IBabySitting";
 import {IBabysittingFilter} from "../interfaces/IBabysittingFilter";
 import {IPriceTimeInterval} from "../interfaces/IPriceTimeInterval";
+import {IAuth, defaultAuth} from "../interfaces/IAuth";
 import {Duration} from "date-fns";
 import {formatDurationsInHours, sumDurations} from "../utils/dates";
 // Import removed to address unused import warning
@@ -35,6 +36,24 @@ const babysittingFilterState = atom({
     default: defaultBabysittingFilter
 });
 
+// État d'authentification avec gestion des rôles
+const authState = atom<IAuth>({
+    key: "authState",
+    default: defaultAuth
+});
+
+const userRoleSelector = selector({
+    key: "userRoleSelector",
+    get: ({get}) => {
+        const auth = get(authState);
+        return {
+            role: auth.role,
+            isAdmin: auth.isAdmin,
+            isAuthenticated: auth.email !== "null" && auth.uid !== "null"
+        };
+    }
+});
+
 const filteredBabySittingState = selector({
     key: "filteredBabySittingState",
     get : async ({get})=>{
@@ -54,17 +73,43 @@ const filteredBabySittingState = selector({
 const babysittingStatsState = selector({
     key:"babysittingStatsState",
     get:({get})=>{
-        const filteredList:IBabysittingFilter = get(babysittingFilterState)
-        let priceDate = new Date()
-        priceDate.setFullYear(filteredList.year)
-        priceDate.setMonth(filteredList.month-1)
-        const price = getPriceFromPriceIntervalsAndDate(get(priceTimeIntervalState), priceDate.valueOf()) || 0;
+        const priceIntervals = get(priceTimeIntervalState);
         const listBabySittings:IBabySitting[] = get(filteredBabySittingState);
+        
         const totalBabySittings:number = listBabySittings.length;
         const totalBabysittingDurations:Duration = sumDurations(listBabySittings.map( (babySitting) =>
         {return babySitting.duration}));
         const totalBabySittingHours = formatDurationsInHours(totalBabysittingDurations);
-        const totalAmount:number = roundTwoDecimals(totalBabySittingHours * price);
+
+        // Group sessions by User and Price to preserve "sum durations then round" logic
+        const sessionsGroupedByUserAndPrice: Record<string, { duration: Duration[], price: number }> = {};
+        
+        listBabySittings.forEach(session => {
+            const price = getPriceFromPriceIntervalsAndDate(
+                priceIntervals,
+                session.arrivalDate.getTime(),
+                session.userId
+            ) || 0;
+            
+            // Key to group by: UserID + Price
+            const key = `${session.userId || 'default'}_${price}`;
+            
+            if (!sessionsGroupedByUserAndPrice[key]) {
+                sessionsGroupedByUserAndPrice[key] = { duration: [], price: price };
+            }
+            sessionsGroupedByUserAndPrice[key].duration.push(session.duration);
+        });
+        
+        let totalAmount = 0;
+        
+        Object.values(sessionsGroupedByUserAndPrice).forEach(group => {
+            const totalDurationForGroup = sumDurations(group.duration);
+            const totalHoursForGroup = formatDurationsInHours(totalDurationForGroup);
+            totalAmount += totalHoursForGroup * group.price;
+        });
+        
+        totalAmount = roundTwoDecimals(totalAmount);
+
         return {totalBabySittings, totalBabySittingHours, totalAmount};
     }
 })
@@ -75,5 +120,7 @@ export {
     priceTimeIntervalState,
     babysittingFilterState,
     filteredBabySittingState,
-    babysittingStatsState
+    babysittingStatsState,
+    authState,
+    userRoleSelector
 };
